@@ -287,6 +287,16 @@ main {
 .flashcard-front {
     font-size: 1.8rem;
     font-weight: 800;
+    justify-content: space-between;
+    padding: 2rem 1rem;
+}
+
+.word-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
 }
 
 .flashcard-front .pos {
@@ -297,6 +307,52 @@ main {
     padding: 0.2rem 0.8rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.icon-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.icon-btn:hover {
+    background: var(--primary-gradient);
+    transform: scale(1.1);
+    border-color: transparent;
+}
+
+.pronunciation-feedback {
+    font-size: 0.85rem;
+    min-height: 20px;
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+
+.pulse {
+    animation: pulse-ring 1.5s infinite;
+    background: rgba(239, 68, 68, 0.4);
+    border-color: #ef4444;
+}
+
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
 
 .flashcard-back {

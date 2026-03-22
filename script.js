@@ -66,8 +66,15 @@ function renderFlashcards() {
         card.innerHTML = `
             <div class="flashcard-inner glass-card">
                 <div class="flashcard-front">
-                    ${item.word}
-                    <span class="pos">${item.pos}</span>
+                    <div class="word-content">
+                        ${item.word}
+                        <span class="pos">${item.pos}</span>
+                    </div>
+                    <div class="audio-controls">
+                        <button class="icon-btn listen-btn" title="Listen to pronunciation"><i class="fa-solid fa-volume-high"></i></button>
+                        <button class="icon-btn speak-btn" title="Practice speaking"><i class="fa-solid fa-microphone"></i></button>
+                    </div>
+                    <div class="pronunciation-feedback"></div>
                 </div>
                 <div class="flashcard-back">
                     <h3>${item.meaning}</h3>
@@ -75,6 +82,74 @@ function renderFlashcards() {
                 </div>
             </div>
         `;
+        
+        // Audio controls logic
+        const listenBtn = card.querySelector('.listen-btn');
+        listenBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent flipping
+            const utterance = new SpeechSynthesisUtterance(item.word);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        });
+
+        const speakBtn = card.querySelector('.speak-btn');
+        const feedback = card.querySelector('.pronunciation-feedback');
+        
+        speakBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                feedback.textContent = "Browser doesn't support speech recognition.";
+                feedback.style.color = "#ef4444";
+                return;
+            }
+            
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            
+            feedback.textContent = "Listening...";
+            feedback.style.color = "#3b82f6";
+            speakBtn.classList.add('pulse');
+            
+            try {
+                recognition.start();
+            } catch (err) {
+                feedback.textContent = "Please allow microphone access.";
+                speakBtn.classList.remove('pulse');
+                return;
+            }
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, '');
+                const targetWord = item.word.toLowerCase();
+                
+                speakBtn.classList.remove('pulse');
+                
+                if (transcript.includes(targetWord) || targetWord.includes(transcript)) {
+                    feedback.textContent = "Excellent pronunciation!";
+                    feedback.style.color = "#10b981";
+                } else {
+                    feedback.textContent = `You said: "${transcript}". Try again!`;
+                    feedback.style.color = "#f59e0b";
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                speakBtn.classList.remove('pulse');
+                if (event.error === 'not-allowed') {
+                    feedback.textContent = "Microphone access denied.";
+                } else {
+                    feedback.textContent = "Could not hear clearly.";
+                }
+                feedback.style.color = "#ef4444";
+            };
+            
+            recognition.onend = () => {
+                speakBtn.classList.remove('pulse');
+            };
+        });
         
         card.addEventListener('click', () => {
             card.classList.toggle('flipped');

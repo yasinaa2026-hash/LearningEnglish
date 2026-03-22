@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LingoLeap | Modern English Learning</title>
+    <!-- Premium Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for vibrant Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Abstract gradient background orbs -->
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <!-- Glassmorphism Navbar -->
+    <nav class="glass-nav">
+        <div class="logo">
+            <i class="fa-solid fa-language"></i> LingoLeap
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#vocabulary">Vocabulary</a></li>
+            <li><a href="#quiz">Quiz</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero fade-in">
+            <div class="hero-content">
+                <span class="badge">Start Your Journey</span>
+                <h1>Master English with <span class="gradient-text">Confidence</span></h1>
+                <p>Interactive flashcards and engaging quizzes designed to accelerate your fluency. Experience learning reimagined in a beautiful environment.</p>
+                <button class="btn-primary" onclick="document.getElementById('vocabulary').scrollIntoView({behavior: 'smooth'})">Get Started <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+            <div class="hero-image">
+                <div class="glass-card feature-card float-anim">
+                    <i class="fa-solid fa-book-open gradient-icon"></i>
+                    <h3>Smart Vocabulary</h3>
+                    <p>Learn contextual words that truly matter in daily conversations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vocabulary Flashcards Section -->
+        <section id="vocabulary" class="section-container fade-in">
+            <div class="section-header">
+                <h2>Essential <span class="gradient-text">Vocabulary</span></h2>
+                <p>Click on the elegant glass cards to reveal meaning and master pronunciation.</p>
+            </div>
+            <div class="flashcard-grid" id="flashcard-container">
+                <!-- Cards will be dynamically injected by JS -->
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="section-container fade-in">
+            <div class="section-header">
+                <h2>Knowledge <span class="gradient-text">Check</span></h2>
+                <p>Test your understanding with a quick, interactive evaluation.</p>
+            </div>
+            <div class="quiz-container glass-card">
+                <div id="quiz-content">
+                    <h3 id="question-text">Loading question...</h3>
+                    <div class="options-grid" id="options-container">
+                        <!-- Options injected by JS -->
+                    </div>
+                </div>
+                <!-- Result Screen -->
+                <div id="quiz-result" class="hidden">
+                    <h3 class="gradient-text text-xl">Quiz Complete!</h3>
+                    <p>Your Final Score: <span id="score-display">0</span> out of 5</p>
+                    <button class="btn-primary mt-4" id="restart-quiz">Try Again <i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 LingoLeap. Built for the GitHub Community.</p>
+    </footer>
+
+    <!-- Core Logic -->
+    <script src="script.js"></script>
+</body>
+</html>

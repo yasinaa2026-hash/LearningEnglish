@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LingoLeap | Modern English Learning</title>
-    <!-- Premium Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>LingoLeap | Master English from Arabic</title>
+    <!-- Fonts: Inter for English, Cairo for Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <!-- Font Awesome for vibrant Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -15,78 +16,252 @@
     <div class="background-globes">
         <div class="globe globe-1"></div>
         <div class="globe globe-2"></div>
+        <div class="globe globe-3"></div>
     </div>
 
-    <!-- Glassmorphism Navbar -->
+    <!-- Navigation -->
     <nav class="glass-nav">
         <div class="logo">
-            <i class="fa-solid fa-language"></i> LingoLeap
+            <i class="fa-solid fa-language"></i> LingoLeap <span class="arabic-logo text-sm ml-2">لينجو ليب</span>
         </div>
         <ul class="nav-links">
-            <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#vocabulary">Vocabulary</a></li>
-            <li><a href="#quiz">Quiz</a></li>
+            <li><a href="#" class="active" data-nav="dashboard">Dashboard <span class="arabic-nav">الرئيسية</span></a></li>
+            <li><a href="#" data-nav="progress">My Progress <span class="arabic-nav">تقدمي</span></a></li>
         </ul>
     </nav>
 
     <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero fade-in">
-            <div class="hero-content">
-                <span class="badge">Start Your Journey</span>
-                <h1>Master English with <span class="gradient-text">Confidence</span></h1>
-                <p>Interactive flashcards and engaging quizzes designed to accelerate your fluency. Experience learning reimagined in a beautiful environment.</p>
-                <button class="btn-primary" onclick="document.getElementById('vocabulary').scrollIntoView({behavior: 'smooth'})">Get Started <i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            <div class="hero-image">
-                <div class="glass-card feature-card float-anim">
-                    <i class="fa-solid fa-book-open gradient-icon"></i>
-                    <h3>Smart Vocabulary</h3>
-                    <p>Learn contextual words that truly matter in daily conversations.</p>
+        <!-- View: Dashboard (Default) -->
+        <section id="view-dashboard" class="app-view active fade-in">
+            <div class="hero">
+                <div class="hero-content">
+                    <span class="badge"><i class="fa-solid fa-rocket"></i> English Mastery | إتقان الإنجليزية</span>
+                    <h1>Unlock Your <span class="gradient-text">Potential</span></h1>
+                    <h2 class="arabic-headline" dir="rtl">أطلق العنان لإمكانياتك</h2>
+                    <p>Dive into organized modules designed specifically for Arabic speakers to achieve English fluency. 2350 words, grammar rules, and interactive quizzes.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- Vocabulary Flashcards Section -->
-        <section id="vocabulary" class="section-container fade-in">
-            <div class="section-header">
-                <h2>Essential <span class="gradient-text">Vocabulary</span></h2>
-                <p>Click on the elegant glass cards to reveal meaning and master pronunciation.</p>
-            </div>
-            <div class="flashcard-grid" id="flashcard-container">
-                <!-- Cards will be dynamically injected by JS -->
-            </div>
-        </section>
-
-        <!-- Quiz Section -->
-        <section id="quiz" class="section-container fade-in">
-            <div class="section-header">
-                <h2>Knowledge <span class="gradient-text">Check</span></h2>
-                <p>Test your understanding with a quick, interactive evaluation.</p>
-            </div>
-            <div class="quiz-container glass-card">
-                <div id="quiz-content">
-                    <h3 id="question-text">Loading question...</h3>
-                    <div class="options-grid" id="options-container">
-                        <!-- Options injected by JS -->
+                
+                <div class="progress-summary glass-card">
+                    <h3>Quick Stats <span class="arabic-title">إحصائيات سريعة</span></h3>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <i class="fa-solid fa-brain gradient-icon-small"></i>
+                            <div class="stat-value" id="stat-words">0</div>
+                            <div class="stat-label">Words Learned</div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fa-solid fa-check-double gradient-icon-small"></i>
+                            <div class="stat-value" id="stat-quiz">0%</div>
+                            <div class="stat-label">Avg Quiz Score</div>
+                        </div>
                     </div>
                 </div>
-                <!-- Result Screen -->
-                <div id="quiz-result" class="hidden">
-                    <h3 class="gradient-text text-xl">Quiz Complete!</h3>
-                    <p>Your Final Score: <span id="score-display">0</span> out of 5</p>
-                    <button class="btn-primary mt-4" id="restart-quiz">Try Again <i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>Learning <span class="gradient-text">Modules</span></h2>
+                    <p dir="rtl" class="arabic-text">اختر الوحدة التي ترغب في تعلمها اليوم</p>
+                </div>
+                
+                <div class="modules-grid">
+                    <!-- Essential Words -->
+                    <div class="glass-card module-card" onclick="openModule('essential')">
+                        <div class="module-icon"><i class="fa-solid fa-star"></i></div>
+                        <h3>150 Essential Words</h3>
+                        <p class="arabic-text" dir="rtl">الكلمات الأساسية التي لا غنى عنها للمبتدئين.</p>
+                        <div class="module-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="prog-essential" style="width: 0%"></div></div>
+                            <span class="progress-text">0/150</span>
+                        </div>
+                    </div>
+
+                    <!-- Important Words -->
+                    <div class="glass-card module-card" onclick="openModule('important')">
+                        <div class="module-icon"><i class="fa-solid fa-layer-group"></i></div>
+                        <h3>2000 Important Words</h3>
+                        <p class="arabic-text" dir="rtl">الأساس المتين للوصول إلى الطلاقة في المحادثات.</p>
+                        <div class="module-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="prog-important" style="width: 0%"></div></div>
+                            <span class="progress-text">0/2000</span>
+                        </div>
+                    </div>
+
+                    <!-- Extra Words -->
+                    <div class="glass-card module-card" onclick="openModule('extra')">
+                        <div class="module-icon"><i class="fa-solid fa-gem"></i></div>
+                        <h3>200 Extra Words</h3>
+                        <p class="arabic-text" dir="rtl">مفردات متقدمة لإثراء لغتك وتميزها.</p>
+                        <div class="module-progress">
+                            <div class="progress-bar"><div class="progress-fill" id="prog-extra" style="width: 0%"></div></div>
+                            <span class="progress-text">0/200</span>
+                        </div>
+                    </div>
+
+                    <!-- Grammar Rules -->
+                    <div class="glass-card module-card" onclick="openModule('grammar')">
+                        <div class="module-icon"><i class="fa-solid fa-spell-check"></i></div>
+                        <h3>Grammar Rules</h3>
+                        <p class="arabic-text" dir="rtl">قواعد اللغة الإنجليزية بأسلوب مبسط ومقاطع مفهومة.</p>
+                        <div class="flex-center gap-2 mt-2">
+                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(1)">Set 1</button>
+                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(2)">Set 2</button>
+                        </div>
+                    </div>
+
+                    <!-- Vocabulary Table (Cables) -->
+                    <div class="glass-card module-card highlight-card" onclick="openModule('table')">
+                        <div class="module-icon"><i class="fa-solid fa-table-list"></i></div>
+                        <h3>Vocabulary Table (Cables)</h3>
+                        <p class="arabic-text" dir="rtl">تصفح جميع الكلمات في جدول منظم وسهل البحث.</p>
+                        <button class="btn-primary mt-2">Open Table <i class="fa-solid fa-table"></i></button>
+                    </div>
+
+                    <!-- Comprehensive Quiz -->
+                    <div class="glass-card module-card highlight-card" onclick="openModule('quiz')">
+                        <div class="module-icon"><i class="fa-solid fa-clipboard-question"></i></div>
+                        <h3>Interactive Quizzes</h3>
+                        <p class="arabic-text" dir="rtl">اختبر معرفتك وقم بتثبيت ما تعلمته من خلال أسئلة تفاعلية.</p>
+                        <button class="btn-primary mt-2">Take Test <i class="fa-solid fa-play"></i></button>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- View: Vocabulary Learner -->
+        <section id="view-vocabulary" class="app-view fade-in">
+            <div class="section-container">
+                <div class="back-nav">
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                </div>
+                
+                <div class="section-header">
+                    <h2 id="vocab-title">Vocabulary</h2>
+                    <p id="vocab-subtitle" class="arabic-text" dir="rtl">تعلم مفردات جديدة</p>
+                </div>
+                
+                <div class="flashcard-deck">
+                    <div class="flashcard-controls">
+                        <button class="btn-outline" onclick="prevWord()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                        <span class="counter" id="vocab-counter">1 / 150</span>
+                        <button class="btn-outline" onclick="nextWord()">Next <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    
+                    <div id="flashcard-container" class="single-flashcard-container">
+                        <!-- Rendered safely via JS -->
+                    </div>
+
+                    <div class="action-buttons mt-4 flex-center">
+                        <button class="btn-success" onclick="markLearned()"><i class="fa-solid fa-check"></i> I know this / حفظت هذه الكلمة</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Grammar -->
+        <section id="view-grammar" class="app-view fade-in">
+            <div class="section-container">
+                <div class="back-nav">
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                </div>
+                <div class="section-header">
+                    <h2 id="grammar-title">Grammar <span class="gradient-text">Rules</span></h2>
+                    <p class="arabic-text" dir="rtl">دليلك المبسط للقواعد</p>
+                </div>
+                
+                <div class="grammar-container" id="grammar-container">
+                    <!-- Grammar rules injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Vocabulary Table (Cables) -->
+        <section id="view-table" class="app-view fade-in">
+            <div class="section-container">
+                <div class="back-nav">
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                </div>
+                <div class="section-header">
+                    <h2>Vocabulary <span class="gradient-text">Explorer</span></h2>
+                    <p class="arabic-text" dir="rtl">ابحث وتصفح قائمة الكلمات الشاملة</p>
+                </div>
+
+                <div class="glass-card p-4 mb-4">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="vocab-search" placeholder="Search words... / ابحث عن كلمة..." oninput="filterVocabTable()">
+                    </div>
+                </div>
+
+                <div class="table-container glass-card">
+                    <table class="vocab-table" id="vocab-table">
+                        <thead>
+                            <tr>
+                                <th>Word</th>
+                                <th>Translation</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vocab-table-body">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Quiz -->
+        <section id="view-quiz" class="app-view fade-in">
+            <div class="section-container">
+                <div class="back-nav">
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                </div>
+                <div class="section-header">
+                    <h2>Knowledge <span class="gradient-text">Check</span></h2>
+                    <p class="arabic-text" dir="rtl">اختبر معلوماتك</p>
+                </div>
+
+                <div class="quiz-setup glass-card" id="quiz-setup">
+                    <h3>Select Quiz Type</h3>
+                    <div class="options-grid mt-4">
+                        <button class="option-btn" onclick="startQuiz('eng-ar')">English ➔ Arabic</button>
+                        <button class="option-btn" onclick="startQuiz('ar-eng')">Arabic ➔ English</button>
+                    </div>
+                </div>
+
+                <div class="quiz-container glass-card hidden" id="quiz-active">
+                    <div class="quiz-header">
+                        <span id="quiz-counter">Question 1/10</span>
+                        <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width: 10%"></div></div>
+                    </div>
+                    <div id="quiz-content" class="mt-4">
+                        <h3 id="question-text" class="question-title">Loading...</h3>
+                        <div class="options-grid" id="options-container">
+                            <!-- Options injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-result" class="quiz-container glass-card hidden">
+                    <i class="fa-solid fa-trophy gradient-icon"></i>
+                    <h3 class="gradient-text text-xl">Quiz Complete!</h3>
+                    <p>Your Final Score: <span id="score-display">0</span> out of 10</p>
+                    <p class="arabic-text mt-2" dir="rtl">أحسنت! حاول مرة أخرى لتحسين نتيجتك.</p>
+                    <button class="btn-primary mt-4" onclick="document.getElementById('quiz-setup').classList.remove('hidden'); document.getElementById('quiz-result').classList.add('hidden');">Try Another <i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 LingoLeap. Built for the GitHub Community.</p>
+        <p>&copy; 2026 LingoLeap. Master English System. <span class="arabic-text">نظام إتقان اللغة الإنجليزية.</span></p>
     </footer>
 
-    <!-- Core Logic -->
+    <!-- Data and Logic -->
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

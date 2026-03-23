@@ -1,269 +1,401 @@
-// High-quality Vocabulary Data
-const vocabulary = [
-    { word: "Resilience", pos: "Noun", meaning: "Capacity to recover quickly from difficulties.", example: "Her resilience allowed her to overcome the challenges." },
-    { word: "Eloquent", pos: "Adjective", meaning: "Fluent or persuasive in speaking or writing.", example: "An eloquent speech that moved the entire audience." },
-    { word: "Pragmatic", pos: "Adjective", meaning: "Dealing with things sensibly and realistically.", example: "We need a pragmatic approach to solve this problem." },
-    { word: "Nuance", pos: "Noun", meaning: "A subtle difference in shade of meaning or sound.", example: "Understanding the nuances of the English language." },
-    { word: "Mitigate", pos: "Verb", meaning: "Make less severe, serious, or painful.", example: "They implemented measures to mitigate the environmental impact." },
-    { word: "Ephemeral", pos: "Adjective", meaning: "Lasting for a very short time.", example: "The beauty of a sunset is ephemeral." }
-];
+/**
+ * Main Application Logic
+ * Master English App (Arabic/English)
+ */
 
-// Meaningful Quiz Data
-const quizQuestions = [
-    {
-        question: "Which word means 'fluent or persuasive in speaking'?",
-        options: ["Ephemeral", "Eloquent", "Pragmatic", "Resilience"],
-        answer: 1
-    },
-    {
-        question: "If an approach is 'Pragmatic', it is:",
-        options: ["Theoretical", "Emotional", "Practical", "Stubborn"],
-        answer: 2
-    },
-    {
-        question: "What is a 'Nuance'?",
-        options: ["A subtle difference", "A loud noise", "A harsh reality", "A solid foundation"],
-        answer: 0
-    },
-    {
-        question: "To 'Mitigate' is to:",
-        options: ["Increase severity", "Complicate further", "Ignore the issue", "Lessen severity"],
-        answer: 3
-    },
-    {
-        question: "A quality describing quick recovery from difficulty:",
-        options: ["Resilience", "Eloquent", "Pragmatic", "Nuance"],
-        answer: 0
-    }
-];
+// --- Global State ---
+let userStats = {
+    learnedWords: [], // Array of word IDs
+    quizScores: []    // Array of { timestamp, score }
+};
 
-let currentQuestion = 0;
-let score = 0;
+let currentCategory = null; 
+let currentWordIndex = 0;
+let currentWordsList = [];
 
+let quizState = {
+    questions: [],
+    currentIndex: 0,
+    score: 0,
+    type: 'eng-ar'
+};
+
+// --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
-    initApp();
+    loadStats();
+    updateDashboardStats();
+    updateDashboardStats();
+    renderGrammar(1); // Default to set 1
 });
 
-function initApp() {
-    renderFlashcards();
-    renderQuiz();
-    setupSmoothScrolling();
-    setupActiveNavState();
+// --- State Management ---
+function loadStats() {
+    const saved = localStorage.getItem('lingoLeapStats');
+    if (saved) {
+        userStats = JSON.parse(saved);
+        if (!userStats.learnedWords) userStats.learnedWords = [];
+        if (!userStats.quizScores) userStats.quizScores = [];
+    }
 }
 
-/**
- * Initializes and renders the interactive vocabulary flashcards safely
- */
-function renderFlashcards() {
-    const container = document.getElementById('flashcard-container');
+function saveStats() {
+    localStorage.setItem('lingoLeapStats', JSON.stringify(userStats));
+    updateDashboardStats();
+}
+
+// --- Navigation ---
+function switchView(viewId) {
+    document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+    
+    const target = document.getElementById(viewId);
+    if(target) {
+        target.classList.add('active');
+        // Simple fade-in re-trigger
+        target.style.animation = 'none';
+        target.offsetHeight; /* trigger reflow */
+        target.style.animation = null; 
+    }
+}
+
+function goBack() {
+    switchView('view-dashboard');
+    updateDashboardStats();
+}
+
+function openModule(type) {
+    if (type === 'grammar') {
+        switchView('view-grammar');
+    } else if (type === 'quiz') {
+        switchView('view-quiz');
+        document.getElementById('quiz-setup').classList.remove('hidden');
+        document.getElementById('quiz-active').classList.add('hidden');
+        document.getElementById('quiz-result').classList.add('hidden');
+    } else if (type === 'table') {
+        renderVocabTable();
+        switchView('view-table');
+    } else {
+        // Vocabulary category
+        currentCategory = type;
+        currentWordsList = vocabularyData[type] || [];
+        currentWordIndex = 0;
+        
+        let headerTitle = "Vocabulary";
+        if (type === 'essential') headerTitle = "150 Essential Words";
+        if (type === 'important') headerTitle = "2000 Important Words";
+        if (type === 'extra') headerTitle = "200 Extra Words";
+        document.getElementById('vocab-title').textContent = headerTitle;
+
+        renderFlashcard();
+        switchView('view-vocabulary');
+    }
+}
+
+// --- Dashboard ---
+function updateDashboardStats() {
+    document.getElementById('stat-words').textContent = userStats.learnedWords.length;
+    
+    if (userStats.quizScores.length > 0) {
+        let total = userStats.quizScores.reduce((acc, curr) => acc + curr.score, 0);
+        let maxTotal = userStats.quizScores.length * 10; // assuming 10 questions per quiz
+        let avg = Math.round((total / maxTotal) * 100);
+        document.getElementById('stat-quiz').textContent = avg + "%";
+    } else {
+        document.getElementById('stat-quiz').textContent = "0%";
+    }
+
+    // Update Progress Bars
+    const updateBar = (id, targetData) => {
+        let max = targetData.length;
+        if(max === 0) return; // avoid division by zero during setup
+        
+        // Count how many learned words exist in this specific category array
+        let learned = targetData.filter(word => userStats.learnedWords.includes(word.id)).length;
+        let percentage = Math.round((learned / max) * 100);
+        
+        document.getElementById(`prog-${id}`).style.width = `${percentage}%`;
+        // Find the sibling span to update the text
+        const textSpan = document.getElementById(`prog-${id}`).parentElement.nextElementSibling;
+        textSpan.textContent = `${learned}/${max}`;
+    };
+
+    updateBar('essential', vocabularyData.essential);
+    updateBar('important', vocabularyData.important);
+    updateBar('extra', vocabularyData.extra);
+}
+
+// --- Grammar ---
+function openGrammarSet(setNum) {
+    const setKey = `set1`; // Default or based on logic
+    // We'll update renderGrammar to take a set
+    renderGrammar(setNum);
+    switchView('view-grammar');
+    document.getElementById('grammar-title').innerHTML = `Grammar <span class="gradient-text">Set ${setNum}</span>`;
+}
+
+function renderGrammar(setNum = 1) {
+    const container = document.getElementById('grammar-container');
     container.innerHTML = '';
     
-    vocabulary.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'flashcard';
-        
-        // Construct glass-card interior carefully avoiding arbitrary innerHTML
-        card.innerHTML = `
-            <div class="flashcard-inner glass-card">
-                <div class="flashcard-front">
-                    <div class="word-content">
-                        ${item.word}
-                        <span class="pos">${item.pos}</span>
-                    </div>
-                    <div class="audio-controls">
-                        <button class="icon-btn listen-btn" title="Listen to pronunciation"><i class="fa-solid fa-volume-high"></i></button>
-                        <button class="icon-btn speak-btn" title="Practice speaking"><i class="fa-solid fa-microphone"></i></button>
-                    </div>
-                    <div class="pronunciation-feedback"></div>
-                </div>
-                <div class="flashcard-back">
-                    <h3>${item.meaning}</h3>
-                    <p>"${item.example}"</p>
-                </div>
-            </div>
-        `;
-        
-        // Audio controls logic
-        const listenBtn = card.querySelector('.listen-btn');
-        listenBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent flipping
-            const utterance = new SpeechSynthesisUtterance(item.word);
-            utterance.lang = 'en-US';
-            window.speechSynthesis.speak(utterance);
-        });
+    const rules = setNum === 1 ? grammarRules.set1 : grammarRules.set2;
+    if(!rules) return;
 
-        const speakBtn = card.querySelector('.speak-btn');
-        const feedback = card.querySelector('.pronunciation-feedback');
-        
-        speakBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                feedback.textContent = "Browser doesn't support speech recognition.";
-                feedback.style.color = "#ef4444";
-                return;
-            }
-            
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            
-            feedback.textContent = "Listening...";
-            feedback.style.color = "#3b82f6";
-            speakBtn.classList.add('pulse');
-            
-            try {
-                recognition.start();
-            } catch (err) {
-                feedback.textContent = "Please allow microphone access.";
-                speakBtn.classList.remove('pulse');
-                return;
-            }
-            
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase().replace(/[.,!?]/g, '');
-                const targetWord = item.word.toLowerCase();
-                
-                speakBtn.classList.remove('pulse');
-                
-                if (transcript.includes(targetWord) || targetWord.includes(transcript)) {
-                    feedback.textContent = "Excellent pronunciation!";
-                    feedback.style.color = "#10b981";
-                } else {
-                    feedback.textContent = `You said: "${transcript}". Try again!`;
-                    feedback.style.color = "#f59e0b";
-                }
-            };
-            
-            recognition.onerror = (event) => {
-                speakBtn.classList.remove('pulse');
-                if (event.error === 'not-allowed') {
-                    feedback.textContent = "Microphone access denied.";
-                } else {
-                    feedback.textContent = "Could not hear clearly.";
-                }
-                feedback.style.color = "#ef4444";
-            };
-            
-            recognition.onend = () => {
-                speakBtn.classList.remove('pulse');
-            };
-        });
-        
-        card.addEventListener('click', () => {
-            card.classList.toggle('flipped');
-        });
-        
-        container.appendChild(card);
+    rules.forEach(rule => {
+        const div = document.createElement('div');
+        div.className = 'grammar-card glass-card';
+        div.innerHTML = `
+            <h3 class="g-title">${rule.title}</h3>
+            <div class="g-desc-ar" dir="rtl">${rule.arabicDescription}</div>
+            <div class="g-structure">${rule.structure}</div>
+            <div class="g-ex">Example: ${rule.example}</div>
+            <div class="g-ex-ar">${rule.arabicExample}</div>
+        `;
+        container.appendChild(div);
     });
 }
 
-/**
- * Handles initialization of quiz questions and UI updates
- */
-function renderQuiz() {
-    const questionText = document.getElementById('question-text');
-    const optionsContainer = document.getElementById('options-container');
-    const quizContent = document.getElementById('quiz-content');
-    const quizResult = document.getElementById('quiz-result');
+// --- Vocabulary Table (Cables) ---
+function renderVocabTable() {
+    const tbody = document.getElementById('vocab-table-body');
+    tbody.innerHTML = '';
+    
+    const allWords = getAllWords();
+    
+    allWords.forEach(word => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="word-cell">${word.english}</td>
+            <td class="translation-cell" dir="rtl">${word.arabic}</td>
+            <td><span class="type-badge">${word.pos}</span></td>
+            <td>
+                <button class="btn-icon" onclick="playAudio('${word.english}')"><i class="fa-solid fa-volume-high"></i></button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
 
-    // Display result if end of quiz
-    if (currentQuestion >= quizQuestions.length) {
-        quizContent.classList.add('hidden');
-        quizResult.classList.remove('hidden');
-        document.getElementById('score-display').textContent = score;
+function filterVocabTable() {
+    const query = document.getElementById('vocab-search').value.toLowerCase();
+    const rows = document.querySelectorAll('#vocab-table-body tr');
+    
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+    });
+}
+
+// --- Flashcards ---
+function renderFlashcard() {
+    if (!currentWordsList || currentWordsList.length === 0) return;
+    
+    const container = document.getElementById('flashcard-container');
+    const wordObj = currentWordsList[currentWordIndex];
+    
+    document.getElementById('vocab-counter').textContent = `${currentWordIndex + 1} / ${currentWordsList.length}`;
+    
+    // Check if learned
+    const isLearned = userStats.learnedWords.includes(wordObj.id);
+    const learnedIcon = isLearned ? `<i class="fa-solid fa-check-circle" style="color: #10b981; position: absolute; top: 20px; right: 20px; font-size: 1.5rem;"></i>` : '';
+
+    container.innerHTML = `
+        <div class="flashcard-inner">
+            <div class="flashcard-front">
+                ${learnedIcon}
+                <div class="word-main">${wordObj.english}</div>
+                <div class="word-pos">${wordObj.pos}</div>
+                <div class="interaction-row">
+                    <button class="icon-btn-lg" onclick="event.stopPropagation(); playAudio('${wordObj.english}')" title="Listen / استمع">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                </div>
+                <p class="arabic-text mt-4" dir="rtl" style="opacity: 0.7">اضغط على البطاقة لإظهار المعنى</p>
+            </div>
+            
+            <div class="flashcard-back">
+                ${learnedIcon}
+                <div class="back-word">${wordObj.english}</div>
+                <div class="arabic-meaning">${wordObj.arabic}</div>
+                <div class="example-box">
+                    <div class="example-eng">"${wordObj.example}"</div>
+                    <div class="example-ar">"${wordObj.arabicExample}"</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Click to flip
+    container.onclick = () => {
+        container.classList.toggle('flipped');
+    };
+    // Ensure it starts facing front
+    container.classList.remove('flipped');
+}
+
+function nextWord() {
+    if (currentWordIndex < currentWordsList.length - 1) {
+        currentWordIndex++;
+        renderFlashcard();
+    }
+}
+
+function prevWord() {
+    if (currentWordIndex > 0) {
+        currentWordIndex--;
+        renderFlashcard();
+    }
+}
+
+function markLearned() {
+    const wordId = currentWordsList[currentWordIndex].id;
+    if (!userStats.learnedWords.includes(wordId)) {
+        userStats.learnedWords.push(wordId);
+        saveStats();
+    }
+    document.getElementById('flashcard-container').classList.remove('flipped');
+    nextWord(); // Auto-advance
+}
+
+function playAudio(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+
+// --- Quiz System ---
+function getAllWords() {
+    return [
+        ...vocabularyData.essential,
+        ...vocabularyData.important,
+        ...vocabularyData.extra
+    ];
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function startQuiz(type) {
+    const allWords = getAllWords();
+    if(allWords.length < 4) {
+        alert("Not enough words in data.js to run the quiz. Need at least 4.");
         return;
     }
 
-    // Populate question and options
-    const q = quizQuestions[currentQuestion];
-    questionText.textContent = q.question;
+    quizState.type = type;
+    quizState.score = 0;
+    quizState.currentIndex = 0;
+    
+    // Select 10 random questions
+    let selectedWords = shuffle([...allWords]).slice(0, 10);
+    
+    quizState.questions = selectedWords.map(targetWord => {
+        // Pick 3 random distractors
+        let distractors = allWords.filter(w => w.id !== targetWord.id);
+        distractors = shuffle(distractors).slice(0, 3);
+        
+        let options = shuffle([targetWord, ...distractors]);
+        
+        return {
+            target: targetWord,
+            options: options,
+            answerIndex: options.findIndex(o => o.id === targetWord.id)
+        };
+    });
+
+    document.getElementById('quiz-setup').classList.add('hidden');
+    document.getElementById('quiz-active').classList.remove('hidden');
+    renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+    if (quizState.currentIndex >= quizState.questions.length) {
+        endQuiz();
+        return;
+    }
+
+    const q = quizState.questions[quizState.currentIndex];
+    const type = quizState.type;
+
+    // Update Progress
+    document.getElementById('quiz-counter').textContent = `Question ${quizState.currentIndex + 1}/${quizState.questions.length}`;
+    const progressPercent = ((quizState.currentIndex) / quizState.questions.length) * 100;
+    document.getElementById('quiz-progress').style.width = `${progressPercent}%`;
+
+    // Render Question text
+    const questionEl = document.getElementById('question-text');
+    if (type === 'eng-ar') {
+        questionEl.textContent = `What is the meaning of "${q.target.english}"?`;
+        questionEl.dir = 'ltr';
+    } else {
+        questionEl.textContent = `ما هو المعنى بالإنجليزية لـ "${q.target.arabic}"؟`;
+        questionEl.dir = 'rtl';
+    }
+
+    // Render Options
+    const optionsContainer = document.getElementById('options-container');
     optionsContainer.innerHTML = '';
 
     q.options.forEach((opt, index) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
-        btn.textContent = opt;
-        btn.addEventListener('click', () => handleQuizAnswer(index, btn));
+        if (type === 'eng-ar') {
+            btn.textContent = opt.arabic;
+            btn.dir = 'rtl';
+        } else {
+            btn.textContent = opt.english;
+            btn.dir = 'ltr';
+        }
+        
+        btn.onclick = () => handleAnswer(index, btn);
         optionsContainer.appendChild(btn);
     });
 }
 
-function handleQuizAnswer(selectedIndex, btnElement) {
-    const q = quizQuestions[currentQuestion];
-    const optionsBtns = document.querySelectorAll('.option-btn');
+function handleAnswer(selectedIndex, btnElement) {
+    const q = quizState.questions[quizState.currentIndex];
+    const optionsBtns = document.querySelectorAll('#options-container .option-btn');
     
-    // Lock answers
+    // Disable clicks
     optionsBtns.forEach(btn => {
         btn.style.pointerEvents = 'none';
         btn.style.opacity = '0.7';
     });
 
-    // Provide visual feedback
-    if (selectedIndex === q.answer) {
+    if (selectedIndex === q.answerIndex) {
         btnElement.classList.add('correct');
         btnElement.style.opacity = '1';
-        score++;
+        quizState.score++;
     } else {
         btnElement.classList.add('wrong');
         btnElement.style.opacity = '1'; 
-        optionsBtns[q.answer].classList.add('correct');
-        optionsBtns[q.answer].style.opacity = '1';
+        optionsBtns[q.answerIndex].classList.add('correct');
+        optionsBtns[q.answerIndex].style.opacity = '1';
     }
 
-    // Delay for transition
     setTimeout(() => {
-        currentQuestion++;
-        renderQuiz();
-    }, 1200);
+        quizState.currentIndex++;
+        renderQuizQuestion();
+    }, 1500);
 }
 
-// Restart Quiz Listener
-document.getElementById('restart-quiz').addEventListener('click', () => {
-    currentQuestion = 0;
-    score = 0;
-    document.getElementById('quiz-content').classList.remove('hidden');
-    document.getElementById('quiz-result').classList.add('hidden');
-    renderQuiz();
-});
+function endQuiz() {
+    document.getElementById('quiz-active').classList.add('hidden');
+    const resultEl = document.getElementById('quiz-result');
+    resultEl.classList.remove('hidden');
+    
+    document.getElementById('score-display').textContent = quizState.score;
 
-/**
- * Sets up UX smoothing mechanisms (Smooth Scroll)
- */
-function setupSmoothScrolling() {
-    document.querySelectorAll('.nav-links a').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
+    // Save score
+    userStats.quizScores.push({
+        timestamp: Date.now(),
+        score: quizState.score
     });
-}
-
-/**
- * Detects scrolling and highlights the active anchor tab
- */
-function setupActiveNavState() {
-    window.addEventListener('scroll', () => {
-        const scrollPosition = window.scrollY;
-        
-        document.querySelectorAll('.section-container, .hero').forEach(section => {
-            const sectionTop = section.offsetTop - 150;
-            const sectionHeight = section.offsetHeight;
-            
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                document.querySelectorAll('.nav-links a').forEach(a => {
-                    a.classList.remove('active');
-                    if (section.getAttribute('id') === a.getAttribute('href').substring(1)) {
-                        a.classList.add('active');
-                    }
-                });
-            }
-        });
-    });
+    saveStats();
 }

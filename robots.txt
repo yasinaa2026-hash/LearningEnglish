@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yasinaa2026-hash.github.io/LearningEnglish/sitemap.xml

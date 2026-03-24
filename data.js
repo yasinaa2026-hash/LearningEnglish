@@ -23,42 +23,15 @@ const vocabularyData = {
         { id: "e13", english: "Work", arabic: "عمل", pos: "Verb/Noun", example: "I need to work today.", arabicExample: "أحتاج إلى العمل اليوم." },
         { id: "e14", english: "Make", arabic: "يصنع / يجعل", pos: "Verb", example: "Can you make some tea?", arabicExample: "هل يمكنك صنع بعض الشاي؟" },
         { id: "e15", english: "Know", arabic: "يعرف", pos: "Verb", example: "I know the answer.", arabicExample: "أنا أعرف الإجابة." }
-        // ... Expand to 150 words ...
     ],
-
-    // Target 2000 Words
     important: [
         { id: "i1", english: "Resilience", arabic: "مرونة / صمود", pos: "Noun", example: "Her resilience allowed her to overcome challenges.", arabicExample: "صمودها سمح لها بالتغلب على التحديات." },
         { id: "i2", english: "Eloquent", arabic: "فصيح / بليغ", pos: "Adjective", example: "An eloquent speech moved the audience.", arabicExample: "خطاب بليغ أثر في الجمهور." },
-        { id: "i3", english: "Pragmatic", arabic: "عملي / واقعي", pos: "Adjective", example: "We need a pragmatic approach.", arabicExample: "نحتاج إلى نهج واقعي وعملي." },
-        { id: "i4", english: "Mitigate", arabic: "يخفف / يقلل", pos: "Verb", example: "Measures to mitigate the impact.", arabicExample: "إجراءات لتخفيف الأثر." },
-        { id: "i5", english: "Achieve", arabic: "يحقق / ينجز", pos: "Verb", example: "He achieved his goals.", arabicExample: "لقد حقق أهدافه." },
-        { id: "i6", english: "Benefit", arabic: "فائدة", pos: "Noun", example: "There are many benefits to exercise.", arabicExample: "هناك فوائد عديدة للرياضة." },
-        { id: "i7", english: "Consistent", arabic: "ثابت / متناسق", pos: "Adjective", example: "He is consistent in his efforts.", arabicExample: "إنه مستمر وثابت في جهوده." },
-        { id: "i8", english: "Determine", arabic: "يحدد / يقرر", pos: "Verb", example: "We must determine the cause.", arabicExample: "يجب أن نحدد السبب." },
-        { id: "i9", english: "Environment", arabic: "بيئة", pos: "Noun", example: "Protecting the environment is vital.", arabicExample: "حماية البيئة أمر حيوي." },
-        { id: "i10", english: "Significant", arabic: "هام / ذو دلالة", pos: "Adjective", example: "A significant improvement was noticed.", arabicExample: "تمت ملاحظة تحسن ملحوظ وهام." },
-        { id: "i11", english: "Sufficient", arabic: "كاف", pos: "Adjective", example: "We have sufficient evidence.", arabicExample: "لدينا أدلة كافية." },
-        { id: "i12", english: "Analyze", arabic: "يحلل", pos: "Verb", example: "Analyze the data carefully.", arabicExample: "قم بتحليل البيانات بعناية." },
-        { id: "i13", english: "Context", arabic: "سياق", pos: "Noun", example: "Understand the word in context.", arabicExample: "افهم الكلمة في سياقها." },
-        { id: "i14", english: "Evaluate", arabic: "يقيم", pos: "Verb", example: "We must evaluate the results.", arabicExample: "يجب أن نقيم النتائج." },
-        { id: "i15", english: "Procedure", arabic: "إجراء", pos: "Noun", example: "Follow the standard procedure.", arabicExample: "اتبع الإجراءات القياسية." }
-        // ... Expand to 2000 words ...
+        { id: "i3", english: "Pragmatic", arabic: "عملي / واقعي", pos: "Adjective", example: "We need a pragmatic approach.", arabicExample: "نحتاج إلى نهج واقعي وعملي." }
     ],
-
-    // Target 200 Words
-    extra: [
-        { id: "x1", english: "Ephemeral", arabic: "سريع الزوال", pos: "Adjective", example: "The beauty of a sunset is ephemeral.", arabicExample: "جمال غروب الشمس سريع الزوال." },
-        { id: "x2", english: "Serendipity", arabic: "صدفة حسنة", pos: "Noun", example: "Finding this cafe was pure serendipity.", arabicExample: "العثور على هذا المقهى كان صدفة حسنة." },
-        { id: "x3", english: "Petrichor", arabic: "رائحة المطر", pos: "Noun", example: "I love the petrichor after a summer storm.", arabicExample: "أحب رائحة المطر بعد عاصفة صيفية." },
-        { id: "x4", english: "Labyrinth", arabic: "متاهة", pos: "Noun", example: "The old city was a labyrinth of narrow streets.", arabicExample: "كانت المدينة القديمة متاهة من الشوارع الضيقة." },
-        { id: "x5", english: "Mellifluous", arabic: "عذب / سلس", pos: "Adjective", example: "She has a mellifluous singing voice.", arabicExample: "لديها صوت غنائي سلس وعذب." }
-        // ... Expand to 200 words ...
-    ]
+    extra: []
 };
 
-// Grammar data could also go here
-// Grammar data organized into two sets
 const grammarRules = {
     set1: [
         {
@@ -88,50 +61,56 @@ const grammarRules = {
             structure: "A (consonants), An (vowels), The (specific)",
             example: "I saw a cat. The cat was black.",
             arabicExample: "رأيت قطة. كانت القطة سوداء."
-        },
-        {
-            title: "Pronouns (الضمائر الشخصية)",
-            arabicDescription: "الكلمات التي تحل محل الأسماء (أنا، أنت، هو...)",
-            structure: "I, You, He, She, It, We, They",
-            example: "She is my sister.",
-            arabicExample: "هي أختي."
         }
     ],
-    set2: [
+    set2: []
+};
+
+const grammarQuestData = {
+    units: [
         {
-            title: "Present Perfect (المضارع التام)",
-            arabicDescription: "حدث بدأ في الماضي ولله صلة بالحاضر.",
-            structure: "Subject + have/has + Past Participle",
-            example: "I have lived here for five years.",
-            arabicExample: "لقد عشت هنا لمدة خمس سنوات."
+            id: 1,
+            title: "Unit 1: The First Steps",
+            arabicTitle: "الوحدة الأولى: البداية",
+            description: "Essential words and basic sentence structure.",
+            tasks: [
+                { type: 'vocab', category: 'essential', count: 5, offset: 0, icon: 'fa-star' },
+                { type: 'grammar', rule: 'Present Simple', icon: 'fa-bolt' },
+                { type: 'quiz', category: 'unit1', icon: 'fa-check-double' }
+            ]
         },
         {
-            title: "Conditionals (الجمل الشرطية)",
-            arabicDescription: "التعبير عن السبب والنتيجة (إذا... سوف...)",
-            structure: "If + Present Simple, Will + Verb",
-            example: "If it rains, we will stay home.",
-            arabicExample: "إذا أمطرت، سنبقى في المنزل."
+            id: 2,
+            title: "Unit 2: Daily Life",
+            arabicTitle: "الوحدة الثانية: الحياة اليومية",
+            description: "Communication in common situations.",
+            tasks: [
+                { type: 'vocab', category: 'essential', count: 10, offset: 5, icon: 'fa-sun' },
+                { type: 'grammar', rule: 'Present Continuous', icon: 'fa-clock' },
+                { type: 'quiz', category: 'unit2', icon: 'fa-trophy' }
+            ]
         },
         {
-            title: "Passive Voice (المبني للمجهول)",
-            arabicDescription: "استخدام الفعل عندما يكون الفاعل غير معروف أو غير مهم.",
-            structure: "Subject + Be + Past Participle",
-            example: "The car was repaired yesterday.",
-            arabicExample: "تم إصلاح السيارة بالأمس."
+            id: 3,
+            title: "Unit 3: Past & Memories",
+            arabicTitle: "الوحدة الثالثة: الماضي والذكريات",
+            description: "Talking about things that already happened.",
+            tasks: [
+                { type: 'vocab', category: 'essential', count: 10, offset: 15, icon: 'fa-history' },
+                { type: 'grammar', rule: 'Past Simple', icon: 'fa-calendar-check' },
+                { type: 'quiz', category: 'unit3', icon: 'fa-award' }
+            ]
         },
         {
-            title: "Reported Speech (الكلام المنقول)",
-            arabicDescription: "نقل ما قاله شخص آخر.",
-            structure: "He said that + (Past Tense)",
-            example: "He said that he was tired.",
-            arabicExample: "قال إنه كان متعباً."
-        },
-        {
-            title: "Modals (الأفعال الناقصة)",
-            arabicDescription: "أفعال للتعبير عن الإمكانية، الإلزام، أو القدرة.",
-            structure: "Can, Should, Must, Might + Base Verb",
-            example: "You should visit a doctor.",
-            arabicExample: "يجب عليك زيارة الطبيب."
+            id: 4,
+            title: "Unit 4: Describing the World",
+            arabicTitle: "الوحدة الرابعة: وصف العالم",
+            description: "Using adjectives and articles correctly.",
+            tasks: [
+                { type: 'vocab', category: 'important', count: 3, offset: 0, icon: 'fa-image' },
+                { type: 'grammar', rule: 'Articles', icon: 'fa-font' },
+                { type: 'quiz', category: 'unit4', icon: 'fa-medal' }
+            ]
         }
     ]
 };

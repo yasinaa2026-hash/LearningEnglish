@@ -39,6 +39,9 @@ body {
     font-weight: 800;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
+    background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
 }
@@ -124,6 +127,9 @@ body {
     gap: 0.6rem;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
+    background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -143,6 +149,36 @@ body {
 
 .nav-links a:hover, .nav-links a.active {
     color: var(--text-primary);
+}
+
+/* Sidebar / Bottom Nav toggle */
+.side-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    border-right: 1px solid var(--border-color);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+}
+
+@media (max-width: 850px) {
+    .side-nav {
+        width: 100%;
+        height: 70px;
+        top: auto;
+        bottom: 0;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+    }
 }
 
 /* Base Glass Card */
@@ -234,6 +270,98 @@ main { padding-top: 100px; min-height: 90vh; }
 .progress-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
 .progress-fill { height: 100%; background: var(--primary-gradient); transition: width 0.5s ease; }
 .progress-text { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); }
+
+/* Learning Path */
+.path-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    position: relative;
+}
+
+.path-unit-header {
+    width: 100%;
+    margin-bottom: 2rem;
+    text-align: center;
+    background: var(--primary-gradient);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.path-node {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 4px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #64748b;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    z-index: 2;
+}
+
+.path-node.unlocked {
+    background: var(--primary-gradient);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.4);
+}
+
+.path-node.completed {
+    background: #10b981;
+    border-color: rgba(255, 255, 255, 0.4);
+    color: white;
+}
+
+.path-node:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+.path-node:active {
+    transform: scale(0.95);
+}
+
+/* Duolingo zigzag logic */
+.path-node:nth-child(even) { transform: translateX(40px); }
+.path-node:nth-child(odd) { transform: translateX(-40px); }
+/* Specific overrides if needed */
+
+/* Gamification Top Bar */
+.game-stats {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 1rem;
+    z-index: 1002;
+}
+
+.stat-pill {
+    background: rgba(30, 41, 59, 0.82);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 800;
+}
+
+.heart-count { color: #ef4444; }
+.streak-count { color: #f59e0b; }
+.xp-count { color: #10b981; }
 
 .highlight-card { border: 1px solid rgba(139, 92, 246, 0.5); background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(88, 28, 135, 0.2) 100%); }
 

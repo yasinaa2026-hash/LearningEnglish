@@ -6,7 +6,12 @@
 // --- Global State ---
 let userStats = {
     learnedWords: [], // Array of word IDs
-    quizScores: []    // Array of { timestamp, score }
+    quizScores: [],   // Array of { timestamp, score }
+    hearts: 5,
+    xp: 0,
+    streak: 0,
+    lastActive: null,
+    unlockedUnits: [0] // Index of unlocked units
 };
 
 let currentCategory = null;
@@ -23,24 +28,67 @@ let quizState = {
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     loadStats();
-    updateDashboardStats();
-    updateDashboardStats();
-    renderGrammar(1); // Default to set 1
+    checkStreak();
+    renderGameTopBar();
+    renderLearningPath();
 });
+
+function checkStreak() {
+    const today = new Date().toDateString();
+    const last = userStats.lastActive ? new Date(userStats.lastActive).toDateString() : null;
+
+    if (last === today) return;
+
+    if (last) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (last === yesterday.toDateString()) {
+            userStats.streak++;
+        } else {
+            userStats.streak = 1;
+        }
+    } else {
+        userStats.streak = 1;
+    }
+    userStats.lastActive = Date.now();
+    saveStats();
+    recoverHearts();
+}
+
+function recoverHearts() {
+    if (userStats.hearts >= 5) return;
+    
+    // Simple recovery logic: 1 heart every 2 hours
+    const now = Date.now();
+    const last = userStats.lastActive || now;
+    const hoursPassed = Math.floor((now - last) / (1000 * 60 * 60));
+    
+    if (hoursPassed >= 2) {
+        const heartsToAdd = Math.floor(hoursPassed / 2);
+        userStats.hearts = Math.min(5, userStats.hearts + heartsToAdd);
+        saveStats();
+    }
+}
 
 // --- State Management ---
 function loadStats() {
-    const saved = localStorage.getItem('lingoLeapStats');
+    const saved = localStorage.getItem('grammarQuestStats');
     if (saved) {
         userStats = JSON.parse(saved);
+        // Migrations / defaults
         if (!userStats.learnedWords) userStats.learnedWords = [];
         if (!userStats.quizScores) userStats.quizScores = [];
+        if (userStats.hearts === undefined) userStats.hearts = 5;
+        if (userStats.xp === undefined) userStats.xp = 0;
+        if (userStats.streak === undefined) userStats.streak = 0;
+        if (!userStats.unlockedUnits) userStats.unlockedUnits = [0];
     }
 }
 
 function saveStats() {
-    localStorage.setItem('lingoLeapStats', JSON.stringify(userStats));
+    localStorage.setItem('grammarQuestStats', JSON.stringify(userStats));
     updateDashboardStats();
+    renderGameTopBar();
 }
 
 // --- Navigation ---
@@ -62,7 +110,7 @@ function goBack() {
     updateDashboardStats();
 }
 
-function openModule(type) {
+function openModule(type, count = 150, offset = 0) {
     if (type === 'grammar') {
         switchView('view-grammar');
     } else if (type === 'quiz') {
@@ -76,13 +124,14 @@ function openModule(type) {
     } else {
         // Vocabulary category
         currentCategory = type;
-        currentWordsList = vocabularyData[type] || [];
+        const baseList = vocabularyData[type] || [];
+        currentWordsList = baseList.slice(offset, offset + count);
         currentWordIndex = 0;
 
         let headerTitle = "Vocabulary";
-        if (type === 'essential') headerTitle = "150 Essential Words";
-        if (type === 'important') headerTitle = "2000 Important Words";
-        if (type === 'extra') headerTitle = "200 Extra Words";
+        if (type === 'essential') headerTitle = "Essential Words";
+        if (type === 'important') headerTitle = "Important Words";
+        if (type === 'extra') headerTitle = "Extra Words";
         document.getElementById('vocab-title').textContent = headerTitle;
 
         renderFlashcard();
@@ -123,34 +172,94 @@ function updateDashboardStats() {
     updateBar('extra', vocabularyData.extra);
 }
 
-// --- Grammar ---
-function openGrammarSet(setNum) {
-    const setKey = `set1`; // Default or based on logic
-    // We'll update renderGrammar to take a set
-    renderGrammar(setNum);
-    switchView('view-grammar');
-    document.getElementById('grammar-title').innerHTML = `Grammar <span class="gradient-text">Set ${setNum}</span>`;
+function renderGameTopBar() {
+    document.getElementById('heart-val').textContent = userStats.hearts;
+    document.getElementById('streak-val').textContent = userStats.streak;
+    document.getElementById('xp-val').textContent = userStats.xp;
 }
 
-function renderGrammar(setNum = 1) {
+function renderLearningPath() {
+    const dashboard = document.getElementById('view-dashboard');
+    // We'll replace the old modules grid with the path container
+    dashboard.innerHTML = `
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Learning <span class="gradient-text">Path</span></h2>
+                <p dir="rtl" class="arabic-text">أكمل الدروس لفتح آفاق جديدة</p>
+            </div>
+            <div class="path-container" id="path-container"></div>
+        </div>
+    `;
+
+    const pathContainer = document.getElementById('path-container');
+    
+    grammarQuestData.units.forEach((unit, uIdx) => {
+        const isUnlocked = userStats.unlockedUnits.includes(uIdx);
+        
+        // Unit Header
+        const header = document.createElement('div');
+        header.className = 'path-unit-header';
+        header.innerHTML = `
+            <h3>${unit.title}</h3>
+            <p dir="rtl" class="arabic-text" style="color: white; opacity: 0.9">${unit.arabicTitle}</p>
+        `;
+        pathContainer.appendChild(header);
+
+        // Nodes for each task
+        unit.tasks.forEach((task, tIdx) => {
+            const node = document.createElement('div');
+            node.className = `path-node ${isUnlocked ? 'unlocked' : ''}`;
+            node.innerHTML = `<i class="fa-solid ${task.icon}"></i>`;
+            
+            if (isUnlocked) {
+                node.onclick = () => startPathTask(uIdx, tIdx);
+            }
+            
+            pathContainer.appendChild(node);
+        });
+    });
+}
+
+function startPathTask(uIdx, tIdx) {
+    const task = grammarQuestData.units[uIdx].tasks[tIdx];
+    if (task.type === 'vocab') {
+        openModule(task.category, task.count, task.offset);
+    } else if (task.type === 'grammar') {
+        openGrammarByRule(task.rule);
+    } else if (task.type === 'quiz') {
+        openModule('quiz');
+    }
+}
+
+function openGrammarByRule(ruleName) {
     const container = document.getElementById('grammar-container');
     container.innerHTML = '';
+    
+    // Find rule in grammarRules
+    let rule = null;
+    [...grammarRules.set1, ...grammarRules.set2].forEach(r => {
+        if (r.title.includes(ruleName)) rule = r;
+    });
 
-    const rules = setNum === 1 ? grammarRules.set1 : grammarRules.set2;
-    if (!rules) return;
-
-    rules.forEach(rule => {
+    if (rule) {
         const div = document.createElement('div');
-        div.className = 'grammar-card glass-card';
+        div.className = 'grammar-card glass-card fade-in';
         div.innerHTML = `
-            <h3 class="g-title">${rule.title}</h3>
+            <div class="grammar-tip-header">
+                <span class="badge">Grammar Tip</span>
+                <h3 class="g-title">${rule.title}</h3>
+            </div>
             <div class="g-desc-ar" dir="rtl">${rule.arabicDescription}</div>
             <div class="g-structure">${rule.structure}</div>
             <div class="g-ex">Example: ${rule.example}</div>
             <div class="g-ex-ar">${rule.arabicExample}</div>
+            <div class="flex-center mt-4">
+                <button class="btn-primary" onclick="goBack()">Got it! / استوعبت القاعدة</button>
+            </div>
         `;
         container.appendChild(div);
-    });
+        switchView('view-grammar');
+    }
 }
 
 // --- Vocabulary Table (Cables) ---
@@ -249,6 +358,7 @@ function markLearned() {
     const wordId = currentWordsList[currentWordIndex].id;
     if (!userStats.learnedWords.includes(wordId)) {
         userStats.learnedWords.push(wordId);
+        userStats.xp += 10; // Award XP
         saveStats();
     }
     document.getElementById('flashcard-container').classList.remove('flipped');
@@ -372,12 +482,24 @@ function handleAnswer(selectedIndex, btnElement) {
         btnElement.classList.add('correct');
         btnElement.style.opacity = '1';
         quizState.score++;
+        userStats.xp += 5; // Small reward for correct answer
     } else {
         btnElement.classList.add('wrong');
         btnElement.style.opacity = '1';
         optionsBtns[q.answerIndex].classList.add('correct');
         optionsBtns[q.answerIndex].style.opacity = '1';
+        
+        // Deduct heart
+        if (userStats.hearts > 0) {
+            userStats.hearts--;
+            renderGameTopBar();
+            if (userStats.hearts === 0) {
+                alert("You're out of hearts! Review some words to get more.");
+                // Option to restart or buy hearts (simple alert for now)
+            }
+        }
     }
+    saveStats();
 
     setTimeout(() => {
         quizState.currentIndex++;
@@ -397,5 +519,19 @@ function endQuiz() {
         timestamp: Date.now(),
         score: quizState.score
     });
+    
+    // Bonus XP for finishing quiz
+    userStats.xp += (quizState.score * 10);
+    
+    // Check for unit completion (simplified: if quiz score > 7, unlock next unit)
+    if (quizState.score >= 7) {
+        let currentMaxUnit = Math.max(...userStats.unlockedUnits);
+        if (currentMaxUnit < grammarQuestData.units.length - 1) {
+            userStats.unlockedUnits.push(currentMaxUnit + 1);
+            alert("Congratulations! Unit " + (currentMaxUnit + 2) + " Unlocked!");
+        }
+    }
+    
     saveStats();
+    renderLearningPath(); // Refresh path state
 }

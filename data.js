@@ -66,51 +66,32 @@ const grammarRules = {
     set2: []
 };
 
+const generateUnits = () => {
+    const units = [];
+    const icons = ['fa-star', 'fa-bolt', 'fa-sun', 'fa-clock', 'fa-history', 'fa-calendar-check', 'fa-image', 'fa-font', 'fa-lightbulb', 'fa-rocket', 'fa-graduation-cap', 'fa-medal', 'fa-trophy', 'fa-award', 'fa-heart', 'fa-fire', 'fa-gem', 'fa-brain', 'fa-spell-check', 'fa-language'];
+    
+    const grammarList = [...grammarRules.set1, ...grammarRules.set2];
+    
+    for (let i = 1; i <= 50; i++) {
+        const vocabCount = i <= 10 ? 5 : (i <= 30 ? 10 : 15);
+        const vocabOffset = (i - 1) * 5; // Simple offset logic
+        const ruleIndex = (i - 1) % grammarList.length;
+        
+        units.push({
+            id: i,
+            title: `Unit ${i}: ${i <= 10 ? 'Basics' : (i <= 30 ? 'intermediate' : 'Advanced')}`,
+            arabicTitle: `الوحدة ${i}: ${i <= 10 ? 'الأساسيات' : (i <= 30 ? 'المستوى المتوسط' : 'المستوى المتقدم')}`,
+            description: `Learning step ${i} of your journey.`,
+            tasks: [
+                { type: 'vocab', category: i % 3 === 0 ? 'important' : 'essential', count: vocabCount, offset: vocabOffset % 100, icon: icons[i % icons.length] },
+                { type: 'grammar', rule: grammarList[ruleIndex].title.split(' (')[0], icon: icons[(i + 5) % icons.length] },
+                { type: 'quiz', category: `unit${i}`, icon: 'fa-check-double' }
+            ]
+        });
+    }
+    return units;
+};
+
 const grammarQuestData = {
-    units: [
-        {
-            id: 1,
-            title: "Unit 1: The First Steps",
-            arabicTitle: "الوحدة الأولى: البداية",
-            description: "Essential words and basic sentence structure.",
-            tasks: [
-                { type: 'vocab', category: 'essential', count: 5, offset: 0, icon: 'fa-star' },
-                { type: 'grammar', rule: 'Present Simple', icon: 'fa-bolt' },
-                { type: 'quiz', category: 'unit1', icon: 'fa-check-double' }
-            ]
-        },
-        {
-            id: 2,
-            title: "Unit 2: Daily Life",
-            arabicTitle: "الوحدة الثانية: الحياة اليومية",
-            description: "Communication in common situations.",
-            tasks: [
-                { type: 'vocab', category: 'essential', count: 10, offset: 5, icon: 'fa-sun' },
-                { type: 'grammar', rule: 'Present Continuous', icon: 'fa-clock' },
-                { type: 'quiz', category: 'unit2', icon: 'fa-trophy' }
-            ]
-        },
-        {
-            id: 3,
-            title: "Unit 3: Past & Memories",
-            arabicTitle: "الوحدة الثالثة: الماضي والذكريات",
-            description: "Talking about things that already happened.",
-            tasks: [
-                { type: 'vocab', category: 'essential', count: 10, offset: 15, icon: 'fa-history' },
-                { type: 'grammar', rule: 'Past Simple', icon: 'fa-calendar-check' },
-                { type: 'quiz', category: 'unit3', icon: 'fa-award' }
-            ]
-        },
-        {
-            id: 4,
-            title: "Unit 4: Describing the World",
-            arabicTitle: "الوحدة الرابعة: وصف العالم",
-            description: "Using adjectives and articles correctly.",
-            tasks: [
-                { type: 'vocab', category: 'important', count: 3, offset: 0, icon: 'fa-image' },
-                { type: 'grammar', rule: 'Articles', icon: 'fa-font' },
-                { type: 'quiz', category: 'unit4', icon: 'fa-medal' }
-            ]
-        }
-    ]
+    units: generateUnits()
 };

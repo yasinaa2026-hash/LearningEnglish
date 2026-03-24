@@ -11,7 +11,7 @@ let userStats = {
     xp: 0,
     streak: 0,
     lastActive: null,
-    unlockedUnits: [0] // Index of unlocked units
+    unlockedUnits: [1] // Unit IDs (1-indexed)
 };
 
 let currentCategory = null;
@@ -81,7 +81,7 @@ function loadStats() {
         if (userStats.hearts === undefined) userStats.hearts = 5;
         if (userStats.xp === undefined) userStats.xp = 0;
         if (userStats.streak === undefined) userStats.streak = 0;
-        if (!userStats.unlockedUnits) userStats.unlockedUnits = [0];
+        if (!userStats.unlockedUnits || userStats.unlockedUnits.includes(0)) userStats.unlockedUnits = [1];
     }
 }
 
@@ -179,56 +179,52 @@ function renderGameTopBar() {
 }
 
 function renderLearningPath() {
-    const dashboard = document.getElementById('view-dashboard');
-    // We'll replace the old modules grid with the path container
-    dashboard.innerHTML = `
-        <div class="section-container">
-            <div class="section-header">
-                <h2>Learning <span class="gradient-text">Path</span></h2>
-                <p dir="rtl" class="arabic-text">أكمل الدروس لفتح آفاق جديدة</p>
-            </div>
-            <div class="path-container" id="path-container"></div>
-        </div>
-    `;
+    const pathContainer = document.getElementById('learning-path');
+    if (!pathContainer) return;
+    pathContainer.innerHTML = '';
 
-    const pathContainer = document.getElementById('path-container');
-    
-    grammarQuestData.units.forEach((unit, uIdx) => {
-        const isUnlocked = userStats.unlockedUnits.includes(uIdx);
-        
-        // Unit Header
+    const unlockedLevels = userStats.unlockedUnits || [1];
+
+    grammarQuestData.units.forEach(unit => {
+        // Render Unit Header
         const header = document.createElement('div');
-        header.className = 'path-unit-header';
+        header.className = 'path-unit-header fade-in';
         header.innerHTML = `
             <h3>${unit.title}</h3>
             <p dir="rtl" class="arabic-text" style="color: white; opacity: 0.9">${unit.arabicTitle}</p>
         `;
         pathContainer.appendChild(header);
 
-        // Nodes for each task
-        unit.tasks.forEach((task, tIdx) => {
+        // Render Nodes
+        unit.tasks.forEach((task, idx) => {
             const node = document.createElement('div');
-            node.className = `path-node ${isUnlocked ? 'unlocked' : ''}`;
-            node.innerHTML = `<i class="fa-solid ${task.icon}"></i>`;
-            
-            if (isUnlocked) {
-                node.onclick = () => startPathTask(uIdx, tIdx);
-            }
-            
+            const isUnlocked = unlockedLevels.includes(unit.id);
+            // Simulating completion for now if the next unit is unlocked
+            const isCompleted = isUnlocked && unlockedLevels.includes(unit.id + 1);
+
+            node.className = `path-node ${isUnlocked ? 'unlocked' : ''} ${isCompleted ? 'completed' : ''} fade-in`;
+            node.innerHTML = `
+                <i class="fa-solid ${task.icon}"></i>
+                <span class="node-label">${task.type.toUpperCase()}</span>
+            `;
+
+            node.onclick = () => {
+                if (!isUnlocked) {
+                    alert('هذا المستوى مغلق! أكمل المستويات السابقة أولاً.');
+                    return;
+                }
+                if (task.type === 'vocab') {
+                    openModule(task.category, task.count, task.offset);
+                } else if (task.type === 'grammar') {
+                    openGrammarByRule(task.rule);
+                } else {
+                    openModule('quiz');
+                }
+            };
+
             pathContainer.appendChild(node);
         });
     });
-}
-
-function startPathTask(uIdx, tIdx) {
-    const task = grammarQuestData.units[uIdx].tasks[tIdx];
-    if (task.type === 'vocab') {
-        openModule(task.category, task.count, task.offset);
-    } else if (task.type === 'grammar') {
-        openGrammarByRule(task.rule);
-    } else if (task.type === 'quiz') {
-        openModule('quiz');
-    }
 }
 
 function openGrammarByRule(ruleName) {
@@ -394,7 +390,7 @@ function shuffle(array) {
 function startQuiz(type) {
     const allWords = getAllWords();
     if (allWords.length < 4) {
-        alert("Not enough words in data.js to run the quiz. Need at least 4.");
+        alert("Not enough data to run the quiz.");
         return;
     }
 
@@ -402,21 +398,30 @@ function startQuiz(type) {
     quizState.score = 0;
     quizState.currentIndex = 0;
 
-    // Select 10 random questions
+    // Mix of Multiple Choice and Sentence Building
     let selectedWords = shuffle([...allWords]).slice(0, 10);
 
-    quizState.questions = selectedWords.map(targetWord => {
-        // Pick 3 random distractors
-        let distractors = allWords.filter(w => w.id !== targetWord.id);
-        distractors = shuffle(distractors).slice(0, 3);
-
-        let options = shuffle([targetWord, ...distractors]);
-
-        return {
-            target: targetWord,
-            options: options,
-            answerIndex: options.findIndex(o => o.id === targetWord.id)
-        };
+    quizState.questions = selectedWords.map((targetWord, idx) => {
+        // Every 3rd question is a sentence builder
+        if (idx % 3 === 2 && targetWord.example) {
+            const words = targetWord.example.replace(/[.!?]/g, '').split(' ');
+            return {
+                type: 'sentence-build',
+                target: targetWord,
+                scrambled: shuffle([...words]),
+                correctOrder: words
+            };
+        } else {
+            let distractors = allWords.filter(w => w.id !== targetWord.id);
+            distractors = shuffle(distractors).slice(0, 3);
+            let options = shuffle([targetWord, ...distractors]);
+            return {
+                type: 'mcq',
+                target: targetWord,
+                options: options,
+                answerIndex: options.findIndex(o => o.id === targetWord.id)
+            };
+        }
     });
 
     document.getElementById('quiz-setup').classList.add('hidden');
@@ -433,39 +438,95 @@ function renderQuizQuestion() {
     const q = quizState.questions[quizState.currentIndex];
     const type = quizState.type;
 
-    // Update Progress
     document.getElementById('quiz-counter').textContent = `Question ${quizState.currentIndex + 1}/${quizState.questions.length}`;
     const progressPercent = ((quizState.currentIndex) / quizState.questions.length) * 100;
     document.getElementById('quiz-progress').style.width = `${progressPercent}%`;
 
-    // Render Question text
     const questionEl = document.getElementById('question-text');
-    if (type === 'eng-ar') {
-        questionEl.textContent = `What is the meaning of "${q.target.english}"?`;
-        questionEl.dir = 'ltr';
-    } else {
-        questionEl.textContent = `ما هو المعنى بالإنجليزية لـ "${q.target.arabic}"؟`;
-        questionEl.dir = 'rtl';
-    }
-
-    // Render Options
     const optionsContainer = document.getElementById('options-container');
     optionsContainer.innerHTML = '';
 
-    q.options.forEach((opt, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'option-btn';
+    if (q.type === 'sentence-build') {
+        questionEl.textContent = `Build this sentence: "${q.target.arabicExample}"`;
+        questionEl.dir = 'rtl';
+        
+        const buildArea = document.createElement('div');
+        buildArea.className = 'sentence-build-area glass-card mb-4 mt-2';
+        buildArea.id = 'sentence-placeholder';
+        buildArea.style.minHeight = '60px';
+        buildArea.style.display = 'flex';
+        buildArea.style.flexWrap = 'wrap';
+        buildArea.style.gap = '8px';
+        buildArea.style.padding = '10px';
+        optionsContainer.parentElement.insertBefore(buildArea, optionsContainer);
+
+        let currentBuild = [];
+        q.scrambled.forEach(word => {
+            const btn = document.createElement('button');
+            btn.className = 'word-chip';
+            btn.textContent = word;
+            btn.onclick = () => {
+                if (btn.classList.contains('used')) return;
+                btn.classList.add('used');
+                currentBuild.push(word);
+                
+                const chip = document.createElement('span');
+                chip.className = 'sentence-chip fade-in';
+                chip.textContent = word;
+                buildArea.appendChild(chip);
+
+                if (currentBuild.length === q.correctOrder.length) {
+                    checkSentence(currentBuild, q.correctOrder);
+                }
+            };
+            optionsContainer.appendChild(btn);
+        });
+    } else {
+        // Remove build area if exists
+        const oldArea = document.querySelector('.sentence-build-area');
+        if (oldArea) oldArea.remove();
+
         if (type === 'eng-ar') {
-            btn.textContent = opt.arabic;
-            btn.dir = 'rtl';
+            questionEl.textContent = `What is the meaning of "${q.target.english}"?`;
+            questionEl.dir = 'ltr';
         } else {
-            btn.textContent = opt.english;
-            btn.dir = 'ltr';
+            questionEl.textContent = `ما هو المعنى بالإنجليزية لـ "${q.target.arabic}"؟`;
+            questionEl.dir = 'rtl';
         }
 
-        btn.onclick = () => handleAnswer(index, btn);
-        optionsContainer.appendChild(btn);
-    });
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = type === 'eng-ar' ? opt.arabic : opt.english;
+            btn.dir = type === 'eng-ar' ? 'rtl' : 'ltr';
+            btn.onclick = () => handleAnswer(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+}
+
+function checkSentence(build, correct) {
+    const isCorrect = build.join(' ').toLowerCase() === correct.join(' ').toLowerCase();
+    const buildArea = document.getElementById('sentence-placeholder');
+    
+    if (isCorrect) {
+        buildArea.style.borderColor = '#10b981';
+        userStats.xp += 20;
+        quizState.score++;
+    } else {
+        buildArea.style.borderColor = '#ef4444';
+        if (userStats.hearts > 0) {
+            userStats.hearts--;
+            renderGameTopBar();
+        }
+    }
+    
+    setTimeout(() => {
+        const buildArea = document.querySelector('.sentence-build-area');
+        if (buildArea) buildArea.remove();
+        quizState.currentIndex++;
+        renderQuizQuestion();
+    }, 2000);
 }
 
 function handleAnswer(selectedIndex, btnElement) {

@@ -74,78 +74,22 @@
 
             <div class="section-container">
                 <div class="section-header">
-                    <h2>Learning <span class="gradient-text">Modules</span></h2>
-                    <p dir="rtl" class="arabic-text">اختر الوحدة التي ترغب في تعلمها اليوم</p>
+                    <h2>Your <span class="gradient-text">Learning Path</span></h2>
+                    <p dir="rtl" class="arabic-text">أكمل المستويات لفتح مهارات جديدة!</p>
                 </div>
 
+                <!-- Duolingo style Path -->
+                <div id="learning-path" class="learning-path-container">
+                    <!-- Injected by script.js -->
+                </div>
+
+                <!-- Keep the old grid as alternative or hide for now -->
+                <div class="section-header mt-8">
+                    <h3>Explore <span class="gradient-text">More</span></h3>
+                    <p dir="rtl" class="arabic-text">تصفح المكتبة الشاملة</p>
+                </div>
                 <div class="modules-grid">
-                    <!-- Essential Words -->
-                    <div class="glass-card module-card" onclick="openModule('essential')">
-                        <div class="module-icon"><i class="fa-solid fa-star"></i></div>
-                        <h3>150 Essential Words</h3>
-                        <p class="arabic-text" dir="rtl">الكلمات الأساسية التي لا غنى عنها للمبتدئين.</p>
-                        <div class="module-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="prog-essential" style="width: 0%"></div>
-                            </div>
-                            <span class="progress-text">0/150</span>
-                        </div>
-                    </div>
-
-                    <!-- Important Words -->
-                    <div class="glass-card module-card" onclick="openModule('important')">
-                        <div class="module-icon"><i class="fa-solid fa-layer-group"></i></div>
-                        <h3>2000 Important Words</h3>
-                        <p class="arabic-text" dir="rtl">الأساس المتين للوصول إلى الطلاقة في المحادثات.</p>
-                        <div class="module-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="prog-important" style="width: 0%"></div>
-                            </div>
-                            <span class="progress-text">0/2000</span>
-                        </div>
-                    </div>
-
-                    <!-- Extra Words -->
-                    <div class="glass-card module-card" onclick="openModule('extra')">
-                        <div class="module-icon"><i class="fa-solid fa-gem"></i></div>
-                        <h3>200 Extra Words</h3>
-                        <p class="arabic-text" dir="rtl">مفردات متقدمة لإثراء لغتك وتميزها.</p>
-                        <div class="module-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="prog-extra" style="width: 0%"></div>
-                            </div>
-                            <span class="progress-text">0/200</span>
-                        </div>
-                    </div>
-
-                    <!-- Grammar Rules -->
-                    <div class="glass-card module-card" onclick="openModule('grammar')">
-                        <div class="module-icon"><i class="fa-solid fa-spell-check"></i></div>
-                        <h3>Grammar Rules</h3>
-                        <p class="arabic-text" dir="rtl">قواعد اللغة الإنجليزية بأسلوب مبسط ومقاطع مفهومة.</p>
-                        <div class="flex-center gap-2 mt-2">
-                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(1)">Set
-                                1</button>
-                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(2)">Set
-                                2</button>
-                        </div>
-                    </div>
-
-                    <!-- Vocabulary Table (Cables) -->
-                    <div class="glass-card module-card highlight-card" onclick="openModule('table')">
-                        <div class="module-icon"><i class="fa-solid fa-table-list"></i></div>
-                        <h3>Vocabulary Table (Cables)</h3>
-                        <p class="arabic-text" dir="rtl">تصفح جميع الكلمات في جدول منظم وسهل البحث.</p>
-                        <button class="btn-primary mt-2">Open Table <i class="fa-solid fa-table"></i></button>
-                    </div>
-
-                    <!-- Comprehensive Quiz -->
-                    <div class="glass-card module-card highlight-card" onclick="openModule('quiz')">
-                        <div class="module-icon"><i class="fa-solid fa-clipboard-question"></i></div>
-                        <h3>Interactive Quizzes</h3>
-                        <p class="arabic-text" dir="rtl">اختبر معرفتك وقم بتثبيت ما تعلمته من خلال أسئلة تفاعلية.</p>
-                        <button class="btn-primary mt-2">Take Test <i class="fa-solid fa-play"></i></button>
-                    </div>
+                    <!-- ... (original cards) ... -->
                 </div>
             </div>
         </section>

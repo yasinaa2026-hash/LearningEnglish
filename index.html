@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,13 @@
     <!-- Fonts: Inter for English, Cairo for Arabic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Abstract gradient background orbs -->
     <div class="background-globes">
@@ -25,7 +29,8 @@
             <i class="fa-solid fa-language"></i> LingoLeap <span class="arabic-logo text-sm ml-2">لينجو ليب</span>
         </div>
         <ul class="nav-links">
-            <li><a href="#" class="active" data-nav="dashboard">Dashboard <span class="arabic-nav">الرئيسية</span></a></li>
+            <li><a href="#" class="active" data-nav="dashboard">Dashboard <span class="arabic-nav">الرئيسية</span></a>
+            </li>
             <li><a href="#" data-nav="progress">My Progress <span class="arabic-nav">تقدمي</span></a></li>
         </ul>
     </nav>
@@ -38,9 +43,10 @@
                     <span class="badge"><i class="fa-solid fa-rocket"></i> English Mastery | إتقان الإنجليزية</span>
                     <h1>Unlock Your <span class="gradient-text">Potential</span></h1>
                     <h2 class="arabic-headline" dir="rtl">أطلق العنان لإمكانياتك</h2>
-                    <p>Dive into organized modules designed specifically for Arabic speakers to achieve English fluency. 2350 words, grammar rules, and interactive quizzes.</p>
+                    <p>Dive into organized modules designed specifically for Arabic speakers to achieve English fluency.
+                        2350 words, grammar rules, and interactive quizzes.</p>
                 </div>
-                
+
                 <div class="progress-summary glass-card">
                     <h3>Quick Stats <span class="arabic-title">إحصائيات سريعة</span></h3>
                     <div class="stats-grid">
@@ -63,7 +69,7 @@
                     <h2>Learning <span class="gradient-text">Modules</span></h2>
                     <p dir="rtl" class="arabic-text">اختر الوحدة التي ترغب في تعلمها اليوم</p>
                 </div>
-                
+
                 <div class="modules-grid">
                     <!-- Essential Words -->
                     <div class="glass-card module-card" onclick="openModule('essential')">
@@ -71,7 +77,9 @@
                         <h3>150 Essential Words</h3>
                         <p class="arabic-text" dir="rtl">الكلمات الأساسية التي لا غنى عنها للمبتدئين.</p>
                         <div class="module-progress">
-                            <div class="progress-bar"><div class="progress-fill" id="prog-essential" style="width: 0%"></div></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="prog-essential" style="width: 0%"></div>
+                            </div>
                             <span class="progress-text">0/150</span>
                         </div>
                     </div>
@@ -82,7 +90,9 @@
                         <h3>2000 Important Words</h3>
                         <p class="arabic-text" dir="rtl">الأساس المتين للوصول إلى الطلاقة في المحادثات.</p>
                         <div class="module-progress">
-                            <div class="progress-bar"><div class="progress-fill" id="prog-important" style="width: 0%"></div></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="prog-important" style="width: 0%"></div>
+                            </div>
                             <span class="progress-text">0/2000</span>
                         </div>
                     </div>
@@ -93,7 +103,9 @@
                         <h3>200 Extra Words</h3>
                         <p class="arabic-text" dir="rtl">مفردات متقدمة لإثراء لغتك وتميزها.</p>
                         <div class="module-progress">
-                            <div class="progress-bar"><div class="progress-fill" id="prog-extra" style="width: 0%"></div></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="prog-extra" style="width: 0%"></div>
+                            </div>
                             <span class="progress-text">0/200</span>
                         </div>
                     </div>
@@ -104,8 +116,10 @@
                         <h3>Grammar Rules</h3>
                         <p class="arabic-text" dir="rtl">قواعد اللغة الإنجليزية بأسلوب مبسط ومقاطع مفهومة.</p>
                         <div class="flex-center gap-2 mt-2">
-                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(1)">Set 1</button>
-                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(2)">Set 2</button>
+                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(1)">Set
+                                1</button>
+                            <button class="btn-outline btn-sm" onclick="event.stopPropagation(); openGrammarSet(2)">Set
+                                2</button>
                         </div>
                     </div>
 
@@ -132,27 +146,31 @@
         <section id="view-vocabulary" class="app-view fade-in">
             <div class="section-container">
                 <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to
+                        Dashboard</button>
                 </div>
-                
+
                 <div class="section-header">
                     <h2 id="vocab-title">Vocabulary</h2>
                     <p id="vocab-subtitle" class="arabic-text" dir="rtl">تعلم مفردات جديدة</p>
                 </div>
-                
+
                 <div class="flashcard-deck">
                     <div class="flashcard-controls">
-                        <button class="btn-outline" onclick="prevWord()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                        <button class="btn-outline" onclick="prevWord()"><i class="fa-solid fa-chevron-left"></i>
+                            Prev</button>
                         <span class="counter" id="vocab-counter">1 / 150</span>
-                        <button class="btn-outline" onclick="nextWord()">Next <i class="fa-solid fa-chevron-right"></i></button>
+                        <button class="btn-outline" onclick="nextWord()">Next <i
+                                class="fa-solid fa-chevron-right"></i></button>
                     </div>
-                    
+
                     <div id="flashcard-container" class="single-flashcard-container">
                         <!-- Rendered safely via JS -->
                     </div>
 
                     <div class="action-buttons mt-4 flex-center">
-                        <button class="btn-success" onclick="markLearned()"><i class="fa-solid fa-check"></i> I know this / حفظت هذه الكلمة</button>
+                        <button class="btn-success" onclick="markLearned()"><i class="fa-solid fa-check"></i> I know
+                            this / حفظت هذه الكلمة</button>
                     </div>
                 </div>
             </div>
@@ -162,13 +180,14 @@
         <section id="view-grammar" class="app-view fade-in">
             <div class="section-container">
                 <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to
+                        Dashboard</button>
                 </div>
                 <div class="section-header">
                     <h2 id="grammar-title">Grammar <span class="gradient-text">Rules</span></h2>
                     <p class="arabic-text" dir="rtl">دليلك المبسط للقواعد</p>
                 </div>
-                
+
                 <div class="grammar-container" id="grammar-container">
                     <!-- Grammar rules injected here -->
                 </div>
@@ -179,7 +198,8 @@
         <section id="view-table" class="app-view fade-in">
             <div class="section-container">
                 <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to
+                        Dashboard</button>
                 </div>
                 <div class="section-header">
                     <h2>Vocabulary <span class="gradient-text">Explorer</span></h2>
@@ -189,7 +209,8 @@
                 <div class="glass-card p-4 mb-4">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="vocab-search" placeholder="Search words... / ابحث عن كلمة..." oninput="filterVocabTable()">
+                        <input type="text" id="vocab-search" placeholder="Search words... / ابحث عن كلمة..."
+                            oninput="filterVocabTable()">
                     </div>
                 </div>
 
@@ -215,7 +236,8 @@
         <section id="view-quiz" class="app-view fade-in">
             <div class="section-container">
                 <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</button>
+                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back to
+                        Dashboard</button>
                 </div>
                 <div class="section-header">
                     <h2>Knowledge <span class="gradient-text">Check</span></h2>
@@ -233,7 +255,9 @@
                 <div class="quiz-container glass-card hidden" id="quiz-active">
                     <div class="quiz-header">
                         <span id="quiz-counter">Question 1/10</span>
-                        <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width: 10%"></div></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="quiz-progress" style="width: 10%"></div>
+                        </div>
                     </div>
                     <div id="quiz-content" class="mt-4">
                         <h3 id="question-text" class="question-title">Loading...</h3>
@@ -248,7 +272,9 @@
                     <h3 class="gradient-text text-xl">Quiz Complete!</h3>
                     <p>Your Final Score: <span id="score-display">0</span> out of 10</p>
                     <p class="arabic-text mt-2" dir="rtl">أحسنت! حاول مرة أخرى لتحسين نتيجتك.</p>
-                    <button class="btn-primary mt-4" onclick="document.getElementById('quiz-setup').classList.remove('hidden'); document.getElementById('quiz-result').classList.add('hidden');">Try Another <i class="fa-solid fa-rotate-right"></i></button>
+                    <button class="btn-primary mt-4"
+                        onclick="document.getElementById('quiz-setup').classList.remove('hidden'); document.getElementById('quiz-result').classList.add('hidden');">Try
+                        Another <i class="fa-solid fa-rotate-right"></i></button>
                 </div>
             </div>
         </section>
@@ -257,11 +283,13 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 LingoLeap. Master English System. <span class="arabic-text">نظام إتقان اللغة الإنجليزية.</span></p>
+        <p>&copy; 2026 LingoLeap. Master English System. <span class="arabic-text">نظام إتقان اللغة الإنجليزية.</span>
+        </p>
     </footer>
 
     <!-- Data and Logic -->
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

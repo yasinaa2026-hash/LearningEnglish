@@ -9,7 +9,7 @@ let userStats = {
     quizScores: []    // Array of { timestamp, score }
 };
 
-let currentCategory = null; 
+let currentCategory = null;
 let currentWordIndex = 0;
 let currentWordsList = [];
 
@@ -46,14 +46,14 @@ function saveStats() {
 // --- Navigation ---
 function switchView(viewId) {
     document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
-    
+
     const target = document.getElementById(viewId);
-    if(target) {
+    if (target) {
         target.classList.add('active');
         // Simple fade-in re-trigger
         target.style.animation = 'none';
         target.offsetHeight; /* trigger reflow */
-        target.style.animation = null; 
+        target.style.animation = null;
     }
 }
 
@@ -78,7 +78,7 @@ function openModule(type) {
         currentCategory = type;
         currentWordsList = vocabularyData[type] || [];
         currentWordIndex = 0;
-        
+
         let headerTitle = "Vocabulary";
         if (type === 'essential') headerTitle = "150 Essential Words";
         if (type === 'important') headerTitle = "2000 Important Words";
@@ -93,7 +93,7 @@ function openModule(type) {
 // --- Dashboard ---
 function updateDashboardStats() {
     document.getElementById('stat-words').textContent = userStats.learnedWords.length;
-    
+
     if (userStats.quizScores.length > 0) {
         let total = userStats.quizScores.reduce((acc, curr) => acc + curr.score, 0);
         let maxTotal = userStats.quizScores.length * 10; // assuming 10 questions per quiz
@@ -106,12 +106,12 @@ function updateDashboardStats() {
     // Update Progress Bars
     const updateBar = (id, targetData) => {
         let max = targetData.length;
-        if(max === 0) return; // avoid division by zero during setup
-        
+        if (max === 0) return; // avoid division by zero during setup
+
         // Count how many learned words exist in this specific category array
         let learned = targetData.filter(word => userStats.learnedWords.includes(word.id)).length;
         let percentage = Math.round((learned / max) * 100);
-        
+
         document.getElementById(`prog-${id}`).style.width = `${percentage}%`;
         // Find the sibling span to update the text
         const textSpan = document.getElementById(`prog-${id}`).parentElement.nextElementSibling;
@@ -135,9 +135,9 @@ function openGrammarSet(setNum) {
 function renderGrammar(setNum = 1) {
     const container = document.getElementById('grammar-container');
     container.innerHTML = '';
-    
+
     const rules = setNum === 1 ? grammarRules.set1 : grammarRules.set2;
-    if(!rules) return;
+    if (!rules) return;
 
     rules.forEach(rule => {
         const div = document.createElement('div');
@@ -157,9 +157,9 @@ function renderGrammar(setNum = 1) {
 function renderVocabTable() {
     const tbody = document.getElementById('vocab-table-body');
     tbody.innerHTML = '';
-    
+
     const allWords = getAllWords();
-    
+
     allWords.forEach(word => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -177,7 +177,7 @@ function renderVocabTable() {
 function filterVocabTable() {
     const query = document.getElementById('vocab-search').value.toLowerCase();
     const rows = document.querySelectorAll('#vocab-table-body tr');
-    
+
     rows.forEach(row => {
         const text = row.innerText.toLowerCase();
         row.style.display = text.includes(query) ? '' : 'none';
@@ -187,12 +187,12 @@ function filterVocabTable() {
 // --- Flashcards ---
 function renderFlashcard() {
     if (!currentWordsList || currentWordsList.length === 0) return;
-    
+
     const container = document.getElementById('flashcard-container');
     const wordObj = currentWordsList[currentWordIndex];
-    
+
     document.getElementById('vocab-counter').textContent = `${currentWordIndex + 1} / ${currentWordsList.length}`;
-    
+
     // Check if learned
     const isLearned = userStats.learnedWords.includes(wordObj.id);
     const learnedIcon = isLearned ? `<i class="fa-solid fa-check-circle" style="color: #10b981; position: absolute; top: 20px; right: 20px; font-size: 1.5rem;"></i>` : '';
@@ -283,7 +283,7 @@ function shuffle(array) {
 
 function startQuiz(type) {
     const allWords = getAllWords();
-    if(allWords.length < 4) {
+    if (allWords.length < 4) {
         alert("Not enough words in data.js to run the quiz. Need at least 4.");
         return;
     }
@@ -291,17 +291,17 @@ function startQuiz(type) {
     quizState.type = type;
     quizState.score = 0;
     quizState.currentIndex = 0;
-    
+
     // Select 10 random questions
     let selectedWords = shuffle([...allWords]).slice(0, 10);
-    
+
     quizState.questions = selectedWords.map(targetWord => {
         // Pick 3 random distractors
         let distractors = allWords.filter(w => w.id !== targetWord.id);
         distractors = shuffle(distractors).slice(0, 3);
-        
+
         let options = shuffle([targetWord, ...distractors]);
-        
+
         return {
             target: targetWord,
             options: options,
@@ -352,7 +352,7 @@ function renderQuizQuestion() {
             btn.textContent = opt.english;
             btn.dir = 'ltr';
         }
-        
+
         btn.onclick = () => handleAnswer(index, btn);
         optionsContainer.appendChild(btn);
     });
@@ -361,7 +361,7 @@ function renderQuizQuestion() {
 function handleAnswer(selectedIndex, btnElement) {
     const q = quizState.questions[quizState.currentIndex];
     const optionsBtns = document.querySelectorAll('#options-container .option-btn');
-    
+
     // Disable clicks
     optionsBtns.forEach(btn => {
         btn.style.pointerEvents = 'none';
@@ -374,7 +374,7 @@ function handleAnswer(selectedIndex, btnElement) {
         quizState.score++;
     } else {
         btnElement.classList.add('wrong');
-        btnElement.style.opacity = '1'; 
+        btnElement.style.opacity = '1';
         optionsBtns[q.answerIndex].classList.add('correct');
         optionsBtns[q.answerIndex].style.opacity = '1';
     }
@@ -389,7 +389,7 @@ function endQuiz() {
     document.getElementById('quiz-active').classList.add('hidden');
     const resultEl = document.getElementById('quiz-result');
     resultEl.classList.remove('hidden');
-    
+
     document.getElementById('score-display').textContent = quizState.score;
 
     // Save score

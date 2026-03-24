@@ -1,0 +1,22 @@
+# Task Plan: English-Arabic Learning App
+
+- [x] Create data separation ([data.js](file:///c:/Users/yasin/Desktop/projects/LearningEnglish/data.js)) for vocabulary categories.
+  - [x] Implement "150 Essential Words" category.
+  - [x] Implement "2000 Important Words" category.
+  - [x] Implement "200 Unimportant Words" category.
+- [x] Enhance UI/UX for all aspects of English ([index.html](file:///c:/Users/yasin/Desktop/projects/LearningEnglish/index.html), [styles.css](file:///c:/Users/yasin/Desktop/projects/LearningEnglish/styles.css)).
+  - [x] Support Arabic fonts and proper RTL considerations.
+  - [x] Add a comprehensive Dashboard with Categories grid.
+  - [x] Create a Grammar rules section.
+- [x] Upgrade JavaScript Logic ([script.js](file:///c:/Users/yasin/Desktop/projects/LearningEnglish/script.js)).
+  - [x] Implement category selection and dynamic flashcard rendering.
+  - [x] Add translation capabilities (Arabic meanings).
+  - [x] Implement progress tracking using `localStorage`.
+- [x] Verification and Testing.
+- [ ] UI/UX "Ultra-Premium" Refinement.
+  - [ ] Fix mobile header scaling and overlaps.
+  - [ ] Implement "Frosted Glass" depth with subtle borders.
+  - [ ] Standardize button gradients and shapes for a "luxury" feel.
+  - [ ] Correct typos and improve study-view navigation.
+  - [ ] Optimize Arabic typography with Tajawal/Cairo and proper line-heights.
+  - [ ] Add staggered entrance animations.

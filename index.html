@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,8 +11,8 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
+
     <!-- Background Orbs -->
     <div class="background-globes">
         <div class="globe globe-1"></div>
@@ -21,44 +20,40 @@
         <div class="globe globe-3"></div>
     </div>
 
-    <!-- Gamification Bar -->
+    <!-- Game Stats -->
     <div class="game-stats">
         <div class="stat-pill"><i class="fa-solid fa-heart heart-count"></i> <span id="heart-val">5</span></div>
         <div class="stat-pill"><i class="fa-solid fa-fire streak-count"></i> <span id="streak-val">0</span></div>
         <div class="stat-pill"><i class="fa-solid fa-star xp-count"></i> <span id="xp-val">0</span></div>
     </div>
 
-    <!-- Locked Modal -->
-    <div id="locked-modal" class="locked-modal hidden">
-        <div class="locked-inner">
-            <i class="fa-solid fa-lock"></i>
-            <p>أكمل المستويات السابقة أولاً!</p>
-        </div>
+    <!-- Locked Toast -->
+    <div id="locked-toast" class="locked-toast">
+        <i class="fa-solid fa-lock"></i>
+        <span>أكمل الوحدة السابقة أولاً!</span>
     </div>
 
-    <!-- Navigation -->
+    <!-- Nav -->
     <nav class="glass-nav">
-        <div class="logo">
-            <i class="fa-solid fa-graduation-cap"></i> GrammarQuest <span class="arabic-logo text-sm ml-2">جرامر كويست</span>
-        </div>
+        <div class="logo"><i class="fa-solid fa-graduation-cap"></i> GrammarQuest <span class="arabic-logo">جرامر كويست</span></div>
         <ul class="nav-links">
-            <li><a href="#" class="active" data-nav="dashboard">Dashboard <span class="arabic-nav">الرئيسية</span></a></li>
-            <li><a href="#" data-nav="progress">My Progress <span class="arabic-nav">تقدمي</span></a></li>
+            <li><a href="#" class="active">Dashboard <span class="arabic-nav">الرئيسية</span></a></li>
         </ul>
     </nav>
 
     <main>
-        <!-- ── Dashboard ── -->
+
+        <!-- ══════════ DASHBOARD ══════════ -->
         <section id="view-dashboard" class="app-view active fade-in">
             <div class="hero">
                 <div class="hero-content">
                     <span class="badge"><i class="fa-solid fa-rocket"></i> English Mastery | إتقان الإنجليزية</span>
                     <h1>Mastery starts <span class="gradient-text">Here</span></h1>
                     <h2 class="arabic-headline" dir="rtl">ابدأ رحلة الإتقان الآن</h2>
-                    <p>Learn English through a gamified path designed for Arabic speakers.</p>
+                    <p>تعلم الإنجليزية عبر مسار تفاعلي مدمج بالقواعد والأسئلة.</p>
                 </div>
                 <div class="progress-summary glass-card">
-                    <h3>Quick Stats <span class="arabic-title">إحصائيات</span></h3>
+                    <h3>إحصائياتك <span class="arabic-title">Quick Stats</span></h3>
                     <div class="stats-grid">
                         <div class="stat-box">
                             <i class="fa-solid fa-brain gradient-icon-small"></i>
@@ -77,175 +72,132 @@
             <div class="section-container">
                 <div class="section-header">
                     <h2>Your <span class="gradient-text">Learning Path</span></h2>
-                    <p dir="rtl" class="arabic-text">أكمل كل وحدة لفتح التالية!</p>
+                    <p class="arabic-text" dir="rtl">كل وحدة = قاعدة + اختبار 🎯</p>
                 </div>
                 <div id="learning-path" class="learning-path-container"></div>
             </div>
         </section>
 
-        <!-- ── Vocabulary Flashcards ── -->
-        <section id="view-vocabulary" class="app-view fade-in">
-            <div class="section-container">
-                <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                </div>
-                <div class="section-header">
-                    <h2 id="vocab-title">Vocabulary</h2>
-                    <p id="vocab-subtitle" class="arabic-text" dir="rtl">تعلم مفردات جديدة</p>
-                </div>
-                <div class="flashcard-deck">
-                    <div class="flashcard-controls">
-                        <button class="btn-outline" onclick="prevWord()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
-                        <span class="counter" id="vocab-counter">1 / 8</span>
-                        <button class="btn-outline" onclick="nextWord()">Next <i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                    <div id="flashcard-container" class="single-flashcard-container"></div>
-                    <div class="action-buttons mt-4 flex-center">
-                        <button class="btn-success" onclick="markLearned()">
-                            <i class="fa-solid fa-check"></i> حفظت هذه الكلمة
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- ══════════ LESSON (Grammar Intro) ══════════ -->
+        <section id="view-lesson" class="app-view fade-in">
+            <div class="lesson-container">
+                <button class="btn-icon back-float" onclick="goBack()">
+                    <i class="fa-solid fa-arrow-left"></i> رجوع
+                </button>
 
-        <!-- ── Grammar ── -->
-        <section id="view-grammar" class="app-view fade-in">
-            <div class="section-container">
-                <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                </div>
-                <div class="section-header">
-                    <h2 id="grammar-title">Grammar <span class="gradient-text">Rules</span></h2>
-                    <p class="arabic-text" dir="rtl">دليلك المبسط للقواعد</p>
-                </div>
-                <div class="grammar-container" id="grammar-container"></div>
-            </div>
-        </section>
-
-        <!-- ── Vocabulary Table ── -->
-        <section id="view-table" class="app-view fade-in">
-            <div class="section-container">
-                <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                </div>
-                <div class="section-header">
-                    <h2>Vocabulary <span class="gradient-text">Explorer</span></h2>
-                    <p class="arabic-text" dir="rtl">ابحث وتصفح قائمة الكلمات</p>
-                </div>
-                <div class="glass-card p-4 mb-4">
-                    <div class="search-box">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="vocab-search" placeholder="Search words... / ابحث..." oninput="filterVocabTable()">
-                    </div>
-                </div>
-                <div class="table-container glass-card">
-                    <table class="vocab-table" id="vocab-table">
-                        <thead>
-                            <tr>
-                                <th>Word</th><th>Translation</th><th>Type</th><th>Audio</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vocab-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── QUIZ ── -->
-        <section id="view-quiz" class="app-view fade-in">
-            <div class="section-container quiz-section">
-                <div class="back-nav">
-                    <button class="btn-icon" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                <!-- Unit Title -->
+                <div class="lesson-header">
+                    <div class="lesson-badge"><i class="fa-solid fa-book-open"></i> Grammar Lesson</div>
+                    <h2 id="gi-unit-name">Unit 1</h2>
+                    <p id="gi-unit-ar" class="arabic-text" dir="rtl"></p>
                 </div>
 
-                <!-- Setup Screen -->
-                <div class="quiz-setup glass-card" id="quiz-setup">
-                    <div class="quiz-unit-info">
-                        <span class="badge"><i class="fa-solid fa-book-open"></i> Unit Quiz</span>
-                        <h2 id="quiz-unit-title">Unit Quiz</h2>
-                        <p id="quiz-unit-subtitle" class="arabic-text" dir="rtl"></p>
+                <!-- Grammar Rule Card -->
+                <div class="grammar-rule-card">
+                    <div class="gr-title-row">
+                        <span class="gr-icon"><i class="fa-solid fa-lightbulb"></i></span>
+                        <h3 id="gi-rule-title">Rule Title</h3>
                     </div>
-                    <h3 class="quiz-setup-heading">اختر نوع الاختبار</h3>
+                    <p id="gi-rule-ar" class="gr-desc" dir="rtl"></p>
+                    <div class="gr-structure" id="gi-structure"></div>
+                    <div class="gr-examples">
+                        <div class="gr-ex-en">
+                            <i class="fa-solid fa-volume-high gr-listen" onclick="playAudio(document.getElementById('gi-example-en').textContent)"></i>
+                            <span id="gi-example-en"></span>
+                        </div>
+                        <div class="gr-ex-ar" dir="rtl" id="gi-example-ar"></div>
+                    </div>
+                </div>
+
+                <!-- Quiz Type Selector -->
+                <div class="quiz-type-section">
+                    <h3 class="qt-heading" dir="rtl">اختر نوع الاختبار</h3>
                     <div class="quiz-type-grid">
-                        <button class="quiz-type-btn" onclick="startQuiz('eng-ar')">
+                        <button class="quiz-type-btn" onclick="startLessonQuiz('eng-ar')">
                             <i class="fa-solid fa-language"></i>
                             <span class="qt-label">English → Arabic</span>
-                            <span class="qt-desc arabic-text" dir="rtl">ترجم الكلمة للعربية</span>
+                            <span class="qt-desc">ترجم للعربية</span>
                         </button>
-                        <button class="quiz-type-btn" onclick="startQuiz('ar-eng')">
+                        <button class="quiz-type-btn" onclick="startLessonQuiz('ar-eng')">
                             <i class="fa-solid fa-spell-check"></i>
                             <span class="qt-label">Arabic → English</span>
-                            <span class="qt-desc arabic-text" dir="rtl">ترجم الكلمة للإنجليزية</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Active Quiz -->
-                <div class="quiz-container glass-card hidden" id="quiz-active">
-                    <!-- Header -->
-                    <div class="quiz-header">
-                        <span id="quiz-counter" class="quiz-counter">1 / 8</span>
-                        <span id="quiz-combo" class="quiz-combo"></span>
-                        <div class="hearts-row">
-                            <i class="fa-solid fa-heart heart-count"></i>
-                            <span id="quiz-hearts">5</span>
-                        </div>
-                    </div>
-                    <div class="quiz-progress-bar">
-                        <div class="quiz-progress-fill" id="quiz-progress" style="width:0%"></div>
-                    </div>
-
-                    <!-- Question -->
-                    <div id="quiz-content" class="quiz-body">
-                        <div class="question-card">
-                            <h3 id="question-text" class="question-title">Loading...</h3>
-                        </div>
-                        <div class="options-grid" id="options-container"></div>
-                    </div>
-
-                    <!-- Feedback Toast -->
-                    <div id="quiz-feedback" class="quiz-feedback-toast"></div>
-                </div>
-
-                <!-- Result Screen -->
-                <div id="quiz-result" class="quiz-result glass-card hidden">
-                    <div class="result-stars" id="result-stars"></div>
-                    <h2 id="result-message" class="result-message">أحسنت!</h2>
-
-                    <div class="result-score-circle">
-                        <div class="score-num">
-                            <span id="score-display">0</span>/<span id="score-total">8</span>
-                        </div>
-                        <div class="score-pct" id="score-pct">0%</div>
-                    </div>
-
-                    <div class="xp-badge">
-                        <i class="fa-solid fa-star"></i>
-                        <span id="xp-earned">+0 XP</span>
-                    </div>
-
-                    <div id="unlock-notice" class="unlock-notice" style="display:none"></div>
-
-                    <div class="result-buttons">
-                        <button class="btn-outline" onclick="retryQuiz()">
-                            <i class="fa-solid fa-rotate-right"></i> حاول مجدداً
-                        </button>
-                        <button class="btn-primary" onclick="nextUnit()">
-                            الوحدة التالية <i class="fa-solid fa-arrow-right"></i>
+                            <span class="qt-desc">ترجم للإنجليزية</span>
                         </button>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- ══════════ QUIZ ══════════ -->
+        <section id="view-quiz" class="app-view fade-in">
+            <div class="quiz-wrapper">
+                <button class="btn-icon back-float" onclick="switchView('view-lesson')">
+                    <i class="fa-solid fa-arrow-left"></i> القاعدة
+                </button>
+
+                <div class="quiz-top">
+                    <span id="quiz-counter" class="quiz-counter">1 / 8</span>
+                    <span id="quiz-combo" class="quiz-combo"></span>
+                    <div class="hearts-row">
+                        <i class="fa-solid fa-heart heart-count"></i>
+                        <span id="quiz-hearts">5</span>
+                    </div>
+                </div>
+
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="quiz-progress"></div>
+                </div>
+
+                <div class="question-card">
+                    <h3 id="question-text" class="question-title">Loading...</h3>
+                </div>
+
+                <div class="options-grid" id="options-container"></div>
+
+                <div id="quiz-feedback" class="quiz-feedback-toast"></div>
+            </div>
+        </section>
+
+        <!-- ══════════ RESULT ══════════ -->
+        <section id="view-result" class="app-view fade-in">
+            <div class="result-wrapper glass-card">
+                <div class="result-stars" id="result-stars"></div>
+                <h2 id="result-message" class="result-message">أحسنت!</h2>
+
+                <div class="result-score-circle">
+                    <div class="score-num"><span id="score-display">0</span>/<span id="score-total">8</span></div>
+                    <div class="score-pct" id="score-pct">0%</div>
+                </div>
+
+                <div class="xp-badge">
+                    <i class="fa-solid fa-star"></i>
+                    <span id="xp-earned">+0 XP</span>
+                </div>
+
+                <div id="unlock-notice" class="unlock-notice" style="display:none"></div>
+
+                <div class="result-buttons">
+                    <button class="btn-outline" onclick="retryQuiz()">
+                        <i class="fa-solid fa-rotate-right"></i> إعادة المحاولة
+                    </button>
+                    <button class="btn-primary" onclick="nextUnit()">
+                        الوحدة التالية <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <button class="btn-icon mt-4" onclick="goBack()">
+                    <i class="fa-solid fa-home"></i> العودة للرئيسية
+                </button>
+            </div>
+        </section>
+
     </main>
 
     <footer>
-        <p>&copy; 2026 GrammarQuest. Premium English Learning. <span class="arabic-text">تعلم الإنجليزية بذكاء.</span></p>
+        <p>&copy; 2026 GrammarQuest — <span class="arabic-text">تعلم الإنجليزية بذكاء</span></p>
     </footer>
 
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
-
 </html>

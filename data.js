@@ -50,16 +50,36 @@ const vocabularyData = {
 // ─── GRAMMAR RULES ───────────────────────────────────────────────────────────
 const grammarRules = {
     set1: [
-        { title: "Present Simple: Habits",      arabicDescription: "للعادات والحقائق.",       structure: "Subject + Verb(s)",          example: "I drink tea.",       arabicExample: "أنا أشرب الشاي." },
-        { title: "Present Simple: Negation",    arabicDescription: "للنفي في المضارع.",        structure: "Don't / Doesn't + Verb",     example: "He doesn't smoke.",  arabicExample: "هو لا يدخن." },
-        { title: "Present Continuous: Now",     arabicDescription: "لأحداث تقع الآن.",         structure: "Am/Is/Are + Verb-ing",       example: "She is reading.",    arabicExample: "هي تقرأ." },
-        { title: "Past Simple: Completed",      arabicDescription: "للماضي المكتمل.",          structure: "Verb-ed / Irregular",        example: "I saw a movie.",     arabicExample: "رأيت فيلماً." },
-        { title: "Future: Will",                arabicDescription: "للمستقبل.",                structure: "Will + Verb",                example: "I will call you.",   arabicExample: "سأتصل بك." },
-        { title: "Pronouns: Subject",           arabicDescription: "ضمائر الفاعل.",            structure: "I, You, He, She, It, We",    example: "We are friends.",    arabicExample: "نحن أصدقاء." },
-        { title: "Articles: A/An",              arabicDescription: "أدوات التنكير.",           structure: "A (consonant), An (vowel)",  example: "An apple a day.",    arabicExample: "تفاحة في اليوم." },
-        { title: "Possessive Adjectives",       arabicDescription: "صفات الملكية.",            structure: "My, Your, His, Her...",      example: "This is my car.",    arabicExample: "هذه سيارتي." },
-        { title: "Plurals: Regular",            arabicDescription: "الجمع المنتظم.",           structure: "Noun + s/es",                example: "Two cats.",          arabicExample: "قطتان." },
-        { title: "Wh- Questions",               arabicDescription: "أسئلة الاستخدام.",         structure: "Who, What, Where, When",     example: "Where is he?",       arabicExample: "أين هو؟" }
+        { title: "Present Simple: Habits",       arabicDescription: "نستخدمه للعادات والحقائق الثابتة.",         structure: "Subject + Verb (+ s/es for he/she/it)",    example: "She drinks coffee every morning.", arabicExample: "هي تشرب القهوة كل صباح." },
+        { title: "Present Simple: Negation",     arabicDescription: "لنفي فعل في المضارع.",                       structure: "Subject + don't/doesn't + Verb",            example: "He doesn't like fish.",            arabicExample: "هو لا يحب السمك." },
+        { title: "Present Continuous",           arabicDescription: "لما يحدث الآن في هذه اللحظة.",              structure: "Subject + am/is/are + Verb-ing",            example: "They are studying now.",           arabicExample: "هم يدرسون الآن." },
+        { title: "Past Simple: Regular",         arabicDescription: "لحدث انتهى في الماضي.",                      structure: "Subject + Verb-ed",                         example: "I walked to school.",              arabicExample: "مشيت إلى المدرسة." },
+        { title: "Past Simple: Irregular",       arabicDescription: "أفعال شاذة لا تأخذ -ed.",                    structure: "Subject + Irregular Verb (2nd form)",       example: "She went to the market.",          arabicExample: "هي ذهبت إلى السوق." },
+        { title: "Future: Will",                 arabicDescription: "للتعبير عن المستقبل أو التوقع.",             structure: "Subject + will + Verb",                     example: "I will help you tomorrow.",        arabicExample: "سأساعدك غداً." },
+        { title: "Future: Going To",             arabicDescription: "لخطط مستقبلية مدروسة.",                      structure: "Subject + am/is/are + going to + Verb",     example: "We are going to travel.",          arabicExample: "نحن سنسافر." },
+        { title: "Subject Pronouns",             arabicDescription: "ضمائر الفاعل - تحل محل الاسم.",              structure: "I / You / He / She / It / We / They",       example: "He is a doctor.",                  arabicExample: "هو طبيب." },
+        { title: "Object Pronouns",              arabicDescription: "ضمائر المفعول به.",                          structure: "me / you / him / her / it / us / them",     example: "Can you help me?",                 arabicExample: "هل يمكنك مساعدتي؟" },
+        { title: "Possessive Adjectives",        arabicDescription: "للتعبير عن الملكية قبل الاسم.",              structure: "my / your / his / her / its / our / their", example: "This is my bag.",                  arabicExample: "هذه حقيبتي." },
+        { title: "Articles: A, An, The",         arabicDescription: "A للتنكير، The للتعريف.",                    structure: "A + consonant | An + vowel | The + known",  example: "I saw an elephant at the zoo.",    arabicExample: "رأيت فيلاً في حديقة الحيوان." },
+        { title: "Plural Nouns",                 arabicDescription: "إضافة s أو es لتكوين الجمع.",                structure: "Noun + s / es / ies",                       example: "Three boxes and two babies.",      arabicExample: "ثلاثة صناديق وطفلان." },
+        { title: "Adjectives: Order",            arabicDescription: "ترتيب الصفات قبل الاسم.",                    structure: "Size + Color + Material + Noun",            example: "A big red wooden table.",          arabicExample: "طاولة خشبية حمراء كبيرة." },
+        { title: "Comparative Adjectives",       arabicDescription: "للمقارنة بين شيئين.",                         structure: "Adj + -er than / more + Adj + than",        example: "This road is longer than that.",   arabicExample: "هذا الطريق أطول من ذلك." },
+        { title: "Superlative Adjectives",       arabicDescription: "للتفضيل المطلق.",                            structure: "the + Adj + -est / the most + Adj",         example: "This is the tallest building.",    arabicExample: "هذا أطول مبنى." },
+        { title: "Modal: Can / Can't",           arabicDescription: "للقدرة أو الاستطاعة.",                       structure: "Subject + can/can't + Verb",                example: "She can swim very well.",          arabicExample: "هي تستطيع السباحة جيداً." },
+        { title: "Modal: Should / Shouldn't",    arabicDescription: "للنصيحة والاقتراح.",                          structure: "Subject + should/shouldn't + Verb",         example: "You should sleep early.",          arabicExample: "يجب أن تنام مبكراً." },
+        { title: "Modal: Must / Mustn't",        arabicDescription: "للضرورة والإلزام.",                           structure: "Subject + must/mustn't + Verb",             example: "You must wear a seatbelt.",        arabicExample: "يجب أن تضع حزام الأمان." },
+        { title: "Questions with Do/Does",       arabicDescription: "لصياغة الأسئلة في المضارع.",                 structure: "Do/Does + Subject + Verb?",                 example: "Does she live here?",              arabicExample: "هل هي تعيش هنا؟" },
+        { title: "Questions with Did",           arabicDescription: "لصياغة أسئلة في الماضي.",                    structure: "Did + Subject + Verb?",                     example: "Did you eat breakfast?",           arabicExample: "هل أكلت الفطور؟" },
+        { title: "There is / There are",         arabicDescription: "للتعبير عن وجود شيء.",                       structure: "There is (singular) / There are (plural)",  example: "There are three chairs here.",     arabicExample: "يوجد هنا ثلاثة كراسي." },
+        { title: "Prepositions of Place",        arabicDescription: "حروف الجر التي تدل على المكان.",              structure: "in / on / at / under / behind / next to",   example: "The keys are on the table.",       arabicExample: "المفاتيح على الطاولة." },
+        { title: "Prepositions of Time",         arabicDescription: "حروف الجر التي تدل على الوقت.",              structure: "in (months/years) / on (days) / at (time)", example: "I wake up at 7 on Mondays.",       arabicExample: "أستيقظ الساعة 7 يوم الاثنين." },
+        { title: "Countable & Uncountable",      arabicDescription: "الأسماء المعدودة وغير المعدودة.",             structure: "some/any/much/many",                        example: "I need some water and many cups.", arabicExample: "أحتاج بعض الماء وكثيراً من الأكواب." },
+        { title: "Conjunctions",                 arabicDescription: "حروف الربط بين الجمل.",                      structure: "and / but / or / because / so / although",  example: "I was tired but I studied.",       arabicExample: "كنت متعباً لكنني درست." },
+        { title: "If Sentences (Type 1)",        arabicDescription: "الشرط المحتمل في المستقبل.",                  structure: "If + Present Simple, will + Verb",          example: "If it rains, I will stay home.",   arabicExample: "إذا مطرت سأبقى في البيت." },
+        { title: "Passive Voice",                arabicDescription: "المبني للمجهول - التركيز على الفعل لا الفاعل.",structure: "Object + is/was + Verb(past participle)",   example: "The letter was written by Ali.",   arabicExample: "الرسالة كُتبت بواسطة علي." },
+        { title: "Present Perfect",              arabicDescription: "لتجربة حدثت في الماضي ولها أثر الآن.",        structure: "Subject + have/has + Verb(past participle)",example: "I have visited Paris before.",      arabicExample: "لقد زرت باريس من قبل." },
+        { title: "Adverbs of Frequency",         arabicDescription: "للتعبير عن مدى تكرار الفعل.",                structure: "always/usually/often/sometimes/rarely/never",example: "She always brushes her teeth.",    arabicExample: "هي دائماً تنظف أسنانها." },
+        { title: "Sentence Structure",           arabicDescription: "الترتيب الأساسي للجملة الإنجليزية.",         structure: "Subject + Verb + Object + (Place) + (Time)",example: "I eat lunch at school at noon.",   arabicExample: "أتناول الغداء في المدرسة في الظهر." }
     ],
     set2: []
 };
@@ -392,24 +412,21 @@ const generateUnits = () => {
                    'fa-rocket','fa-graduation-cap','fa-medal','fa-trophy','fa-award',
                    'fa-brain','fa-spell-check','fa-language','fa-book-open','fa-compass',
                    'fa-map','fa-flag','fa-lightbulb','fa-fire'];
-    const grammarList = grammarRules.set1;
+    const grammarList = grammarRules.set1; // 30 rules
 
     for (let i = 1; i <= 150; i++) {
-        const ruleIdx = (i - 1) % grammarList.length;
+        const ruleIdx  = (i - 1) % grammarList.length;
         const titleObj = unitTitles[i - 1] || { en:`Step ${i}`, ar:`خطوة ${i}` };
         units.push({
             id: i,
             title: `Unit ${i}: ${titleObj.en}`,
             arabicTitle: `الوحدة ${i}: ${titleObj.ar}`,
-            description: `${grammarList[ruleIdx].title.split(':')[0]} + vocabulary`,
-            tasks: [
-                { type:'vocab',   icon: icons[i % icons.length] },
-                { type:'grammar', rule: grammarList[ruleIdx].title.split(':')[0], icon: icons[(i+7) % icons.length] },
-                { type:'quiz',    icon: 'fa-check-double' }
-            ]
+            icon: icons[i % icons.length],
+            grammar: grammarList[ruleIdx]   // ← grammar rule attached to unit
         });
     }
     return units;
 };
 
 const grammarQuestData = { units: generateUnits() };
+
